@@ -1,0 +1,12 @@
+C:\source\ProjectManagementApp\AppHost.ServiceDefaults\bin\Debug\net10.0\AppHost.ServiceDefaults.deps.json
+C:\source\ProjectManagementApp\AppHost.ServiceDefaults\bin\Debug\net10.0\AppHost.ServiceDefaults.dll
+C:\source\ProjectManagementApp\AppHost.ServiceDefaults\bin\Debug\net10.0\AppHost.ServiceDefaults.pdb
+C:\source\ProjectManagementApp\AppHost.ServiceDefaults\obj\Debug\net10.0\AppHost.ServiceDefaults.csproj.AssemblyReference.cache
+C:\source\ProjectManagementApp\AppHost.ServiceDefaults\obj\Debug\net10.0\AppHost.ServiceDefaults.GeneratedMSBuildEditorConfig.editorconfig
+C:\source\ProjectManagementApp\AppHost.ServiceDefaults\obj\Debug\net10.0\AppHost.ServiceDefaults.AssemblyInfoInputs.cache
+C:\source\ProjectManagementApp\AppHost.ServiceDefaults\obj\Debug\net10.0\AppHost.ServiceDefaults.AssemblyInfo.cs
+C:\source\ProjectManagementApp\AppHost.ServiceDefaults\obj\Debug\net10.0\AppHost.ServiceDefaults.csproj.CoreCompileInputs.cache
+C:\source\ProjectManagementApp\AppHost.ServiceDefaults\obj\Debug\net10.0\AppHost.ServiceDefaults.dll
+C:\source\ProjectManagementApp\AppHost.ServiceDefaults\obj\Debug\net10.0\refint\AppHost.ServiceDefaults.dll
+C:\source\ProjectManagementApp\AppHost.ServiceDefaults\obj\Debug\net10.0\AppHost.ServiceDefaults.pdb
+C:\source\ProjectManagementApp\AppHost.ServiceDefaults\obj\Debug\net10.0\ref\AppHost.ServiceDefaults.dll
