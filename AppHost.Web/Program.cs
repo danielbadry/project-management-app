@@ -1,5 +1,8 @@
 using AppHost.Web;
 using AppHost.Web.Components;
+using AppHost.Web.Services;
+using AppHost.Web.Authentication;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +12,14 @@ builder.AddServiceDefaults();
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-
+builder.Services.AddScoped<LocalStorageService>();
+builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddOutputCache();
+
+builder.Services.AddScoped<
+    AuthenticationStateProvider,
+    CustomAuthenticationStateProvider>();
 
 builder.Services.AddHttpClient<WeatherApiClient>(client =>
     {

@@ -1,0 +1,48 @@
+﻿@page "/login"
+@using AppHost.Web.Components.Layouts
+@layout AuthLayout
+
+@using Dtos = AppHost.Web.Dtos;
+@using AppHost.Web.Services;
+@inject AuthService AuthService;
+
+@inject NavigationManager Navigation
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<PageTitle>Login</PageTitle>
+
+<EditForm Model="@loginDto" FormName="Login" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <div>
+        <label>Username:</label>
+        <ValidationMessage For="@(() => loginDto.Username)" />
+        <InputText @bind-Value="loginDto.Username" />
+    </div>
+    <div>
+        <label>Password:</label>
+        <ValidationMessage For="@(() => loginDto.Password)" />
+        <InputText @bind-Value="loginDto.Password" />
+    </div>
+    <div>
+        <button type="submit">Login</button>
+    </div>
+</EditForm>
+
+@code {
+    private Dtos.Login loginDto = new();
+
+    private async Task HandleLogin()
+    {
+        var success =
+                    await AuthService.Login(
+                        loginDto.Username,
+                        loginDto.Password);
+
+        if (success)
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+
+}

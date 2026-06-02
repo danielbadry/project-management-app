@@ -1,0 +1,42 @@
+@using System.Reflection
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager Navigation
+
+@if (!RequiresAuthentication || isAuthorized == true)
+{
+    <RouteView RouteData="RouteData" DefaultLayout="DefaultLayout" />
+}
+
+@code {
+    [Parameter]
+    public RouteData RouteData { get; set; } = default!;
+
+    [Parameter]
+    public Type DefaultLayout { get; set; } = default!;
+
+    private bool? isAuthorized;
+
+    private bool RequiresAuthentication =>
+        RouteData.PageType.GetCustomAttribute<RequireAuthenticationAttribute>() is not null;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        isAuthorized = null;
+
+        if (!RequiresAuthentication)
+        {
+            return;
+        }
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        isAuthorized = authState.User.Identity?.IsAuthenticated == true;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (isAuthorized == false)
+        {
+            Navigation.NavigateTo("/login");
+        }
+    }
+}
