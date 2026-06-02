@@ -6,6 +6,11 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Ensure server logs appear in the terminal and VS debug output.
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+
 // Add service defaults & Aspire client integrations.
 builder.AddServiceDefaults();
 
@@ -14,12 +19,19 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddScoped<LocalStorageService>();
 builder.Services.AddScoped<TokenService>();
-builder.Services.AddScoped<AuthService>();
 builder.Services.AddOutputCache();
 
 builder.Services.AddScoped<
     AuthenticationStateProvider,
     CustomAuthenticationStateProvider>();
+
+builder.Services.AddHttpClient<AuthService>(client =>
+    {
+        client.BaseAddress = new(
+            builder.Environment.IsDevelopment()
+                ? "http://apiservice"
+                : "https+http://apiservice");
+    });
 
 builder.Services.AddHttpClient<WeatherApiClient>(client =>
     {
