@@ -12,22 +12,33 @@
 
 <PageTitle>Login</PageTitle>
 
-<EditForm Model="@loginDto" FormName="Login" OnValidSubmit="HandleLogin">
-    <DataAnnotationsValidator />
-    <div>
-        <label>Username:</label>
-        <ValidationMessage For="@(() => loginDto.Username)" />
-        <InputText @bind-Value="loginDto.Username" />
+<section class="login-shell" aria-labelledby="login-title">
+    <div class="login-panel">
+        <div class="login-heading">
+            <span class="login-badge">Project Management</span>
+            <h1 id="login-title">Sign in</h1>
+            <p>Continue to your workspace.</p>
+        </div>
+
+        <EditForm Model="@loginDto" FormName="Login" OnValidSubmit="HandleLogin" class="login-form">
+            <DataAnnotationsValidator />
+
+            <div class="field">
+                <label for="username">Username</label>
+                <InputText id="username" class="field-input" @bind-Value="loginDto.Username" autocomplete="username" />
+                <ValidationMessage For="@(() => loginDto.Username)" />
+            </div>
+
+            <div class="field">
+                <label for="password">Password</label>
+                <InputText id="password" type="password" class="field-input" @bind-Value="loginDto.Password" autocomplete="current-password" />
+                <ValidationMessage For="@(() => loginDto.Password)" />
+            </div>
+
+            <button class="login-button" type="submit">Login</button>
+        </EditForm>
     </div>
-    <div>
-        <label>Password:</label>
-        <ValidationMessage For="@(() => loginDto.Password)" />
-        <InputText @bind-Value="loginDto.Password" />
-    </div>
-    <div>
-        <button type="submit">Login</button>
-    </div>
-</EditForm>
+</section>
 
 @code {
     private Dtos.Login loginDto = new();
