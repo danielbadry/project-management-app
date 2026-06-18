@@ -1,5 +1,4 @@
-﻿using Dtos = AppHost.Web.Dtos;
-using AppHost.Web.Services;
+﻿using AppHost.Web.Services;
 using Microsoft.AspNetCore.Components;
 namespace AppHost.Web.Components.Pages;
 
