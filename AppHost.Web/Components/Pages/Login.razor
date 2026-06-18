@@ -2,12 +2,6 @@
 @using AppHost.Web.Components.Layouts
 @layout AuthLayout
 
-@using Dtos = AppHost.Web.Dtos;
-@using AppHost.Web.Services;
-@inject AuthService AuthService;
-
-@inject NavigationManager Navigation
-
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>Login</PageTitle>
@@ -20,40 +14,23 @@
             <p>Continue to your workspace.</p>
         </div>
 
-        <EditForm Model="@loginDto" FormName="Login" OnValidSubmit="HandleLogin" class="login-form">
+        <EditForm Model="@LoginDto" FormName="Login" OnValidSubmit="HandleLogin" class="login-form">
             <DataAnnotationsValidator />
 
             <div class="field">
                 <label for="username">Username</label>
-                <InputText id="username" class="field-input" @bind-Value="loginDto.Username" autocomplete="username" />
-                <ValidationMessage For="@(() => loginDto.Username)" />
+                <InputText id="username" class="field-input" @bind-Value="LoginDto.Username" autocomplete="username" />
+                <ValidationMessage For="@(() => LoginDto.Username)" />
             </div>
 
             <div class="field">
                 <label for="password">Password</label>
-                <InputText id="password" type="password" class="field-input" @bind-Value="loginDto.Password" autocomplete="current-password" />
-                <ValidationMessage For="@(() => loginDto.Password)" />
+                <InputText id="password" type="password" class="field-input" @bind-Value="LoginDto.Password"
+                           autocomplete="current-password" />
+                <ValidationMessage For="@(() => LoginDto.Password)" />
             </div>
 
             <button class="login-button" type="submit">Login</button>
         </EditForm>
     </div>
 </section>
-
-@code {
-    private Dtos.Login loginDto = new();
-
-    private async Task HandleLogin()
-    {
-        var success =
-                    await AuthService.Login(
-                        loginDto.Username,
-                        loginDto.Password);
-
-        if (success)
-        {
-            Navigation.NavigateTo("/");
-        }
-    }
-
-}
