@@ -1,4 +1,4 @@
-namespace AppHost.Web.Dtos;
+namespace Shared.Dtos.Login;
 
 public class LoginResponseDto
 {

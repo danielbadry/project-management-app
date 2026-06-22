@@ -1,31 +1,23 @@
 namespace AppHost.Web.Services;
 
 using AppHost.Web.Authentication;
-using AppHost.Web.Dtos;
+using Shared.Dtos.Login;
+using Shared.Dtos;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 
-public class AuthService
+public class AuthService(
+    HttpClient http,
+    TokenService tokenService,
+    AuthenticationStateProvider authProvider,
+    ILogger<AuthService> logger)
 {
-    private readonly HttpClient _http;
-    private readonly TokenService _tokenService;
-    private readonly CustomAuthenticationStateProvider _authProvider;
-    private readonly ILogger<AuthService> _logger;
-
-    public AuthService(
-        HttpClient http,
-        TokenService tokenService,
-        AuthenticationStateProvider authProvider,
-        ILogger<AuthService> logger)
-    {
-        _http = http;
-        _tokenService = tokenService;
-        _logger = logger;
-
-        _authProvider =
+    private readonly HttpClient _http = http;
+    private readonly TokenService _tokenService = tokenService;
+    private readonly CustomAuthenticationStateProvider _authProvider =
             (CustomAuthenticationStateProvider)authProvider;
-    }
+    private readonly ILogger<AuthService> _logger = logger;
 
     public async Task<bool> Login(
         string username,
@@ -60,19 +52,19 @@ public class AuthService
 
             var result =
                 await response.Content
-                    .ReadFromJsonAsync<LoginResponseDto>();
+                    .ReadFromJsonAsync<ApiResponse<LoginResponseDto>>();
 
-            if (result is null)
+            if (result is null || result.Response is null)
             {
                 _logger.LogWarning("Login response body could not be parsed as LoginResponseDto.");
                 return false;
             }
 
             await _tokenService.SetTokenAsync(
-                result.Token);
+                result.Response.Token);
 
             _authProvider.NotifyUserAuthenticated(
-                result.Token);
+                result.Response.Token);
 
             return true;
         }
