@@ -20,7 +20,8 @@ public class AuthController : ControllerBase
         return Ok(new ApiResponse<LoginResponseDto>
         {
             Message = "success login",
-            Response = {
+            Response = new LoginResponseDto
+            {
                 Token = "eyJhbGciOiJIUzI1NiJ9." +
                 "eyJuYW1lIjoiRGFuaWVsIiwicm9sZSI6IkFkbWluIn0." +
                 "fake-signature"
