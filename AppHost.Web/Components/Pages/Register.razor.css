@@ -1,0 +1,124 @@
+.login-shell {
+  width: min(100%, 440px);
+}
+
+.login-panel {
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 8px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+  padding: clamp(1.5rem, 5vw, 2.5rem);
+}
+
+.login-heading {
+  margin-bottom: 1.75rem;
+}
+
+.login-badge {
+  color: #22635b;
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin-bottom: 0.65rem;
+  text-transform: uppercase;
+}
+
+.login-heading h1 {
+  color: #17212b;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.login-heading p {
+  color: #65717c;
+  margin: 0.65rem 0 0;
+}
+
+.login-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.field label {
+  color: #24313d;
+  font-size: 0.92rem;
+  font-weight: 650;
+}
+
+.field-input {
+  background: #f8faf9;
+  border: 1px solid #cfd8dc;
+  border-radius: 6px;
+  color: #17212b;
+  font: inherit;
+  min-height: 2.75rem;
+  padding: 0.65rem 0.8rem;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    background-color 120ms ease;
+  width: 100%;
+}
+
+.field-input:focus {
+  background: #ffffff;
+  border-color: #22635b;
+  box-shadow: 0 0 0 0.2rem rgba(34, 99, 91, 0.18);
+  outline: none;
+}
+
+.validation-message {
+  color: #b42318;
+  font-size: 0.84rem;
+}
+
+.login-button {
+  align-items: center;
+  background: #22635b;
+  border: 0;
+  border-radius: 6px;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  font-weight: 700;
+  justify-content: center;
+  margin-top: 0.35rem;
+  min-height: 2.85rem;
+  padding: 0.75rem 1rem;
+  transition:
+    background-color 120ms ease,
+    transform 120ms ease;
+  width: 100%;
+}
+
+.login-button:hover {
+  background: #1a514b;
+}
+
+.login-button:active {
+  transform: translateY(1px);
+}
+
+.login-button:focus-visible {
+  box-shadow: 0 0 0 0.2rem rgba(34, 99, 91, 0.28);
+  outline: none;
+}
+
+@media (max-width: 480px) {
+  .login-panel {
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.2);
+    padding: 1.25rem;
+  }
+
+  .login-heading h1 {
+    font-size: 1.7rem;
+  }
+}

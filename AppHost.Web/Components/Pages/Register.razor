@@ -1,0 +1,49 @@
+﻿@page "/register"
+@using AppHost.Web.Components.Layouts
+@layout AuthLayout
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<PageTitle>Register</PageTitle>
+
+<section class="login-shell" aria-labelledby="login-title">
+    <div class="login-panel">
+        <div class="login-heading">
+            <span class="login-badge">Project Management</span>
+            <h1 id="login-title">Register</h1>
+        </div>
+
+        <EditForm Model="@RegisterDto" FormName="Register" OnValidSubmit="HandleRegister" class="login-form">
+            <DataAnnotationsValidator />
+            <div class="field">
+                <label for="username">Name</label>
+                <InputText id="username" class="field-input" @bind-Value="RegisterDto.Name" />
+                <ValidationMessage For="@(() => RegisterDto.Name)" />
+            </div>
+            <div class="field">
+                <label for="username">Email</label>
+                <InputText id="username" class="field-input" @bind-Value="RegisterDto.Email" />
+                <ValidationMessage For="@(() => RegisterDto.Email)" />
+            </div>
+            <div class="field">
+                <label for="username">Username</label>
+                <InputText id="username" class="field-input" @bind-Value="RegisterDto.Username" />
+                <ValidationMessage For="@(() => RegisterDto.Username)" />
+            </div>
+
+            <div class="field">
+                <label for="password">Password</label>
+                <InputText id="password" type="password" class="field-input" @bind-Value="RegisterDto.Password" />
+                <ValidationMessage For="@(() => RegisterDto.Password)" />
+            </div>
+            <div class="field">
+                <label for="password">ConfirmPassword</label>
+                <InputText id="password" type="password" class="field-input"
+                           @bind-Value="RegisterDto.ConfirmPassword" />
+                <ValidationMessage For="@(() => RegisterDto.ConfirmPassword)" />
+            </div>
+
+            <button class="login-button" type="submit">Register</button>
+        </EditForm>
+    </div>
+</section>

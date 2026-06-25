@@ -25,6 +25,7 @@ builder.Services.AddScoped<
     AuthenticationStateProvider,
     CustomAuthenticationStateProvider>();
 
+builder.Services.AddScoped<RegisterService>();
 builder.Services.AddHttpClient<AuthService>(client =>
     {
         client.BaseAddress = new(
