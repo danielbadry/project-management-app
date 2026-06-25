@@ -19,20 +19,22 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddScoped<LocalStorageService>();
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<RegisterService>();
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddOutputCache();
 
 builder.Services.AddScoped<
     AuthenticationStateProvider,
     CustomAuthenticationStateProvider>();
 
-builder.Services.AddScoped<RegisterService>();
-builder.Services.AddHttpClient<AuthService>(client =>
-    {
-        client.BaseAddress = new(
-            builder.Environment.IsDevelopment()
-                ? "http://apiservice"
-                : "https+http://apiservice");
-    });
+builder.Services.AddHttpClient("ApiClient", client =>
+{
+    client.BaseAddress = new Uri(
+        builder.Environment.IsDevelopment()
+            ? "http://apiservice"
+            : "https+http://apiservice");
+});
+
 
 var app = builder.Build();
 

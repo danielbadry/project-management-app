@@ -2,38 +2,50 @@ using Shared.Dtos;
 using Shared.Dtos.Register;
 namespace AppHost.Web.Services;
 
-public class RegisterService(HttpClient http, ILogger<RegisterService> logger)
+public class RegisterService(IHttpClientFactory factory, ILogger<RegisterService> logger)
 {
     private readonly string registerUrl = "api/register";
-    private readonly HttpClient _http = http;
-    private readonly ILogger _logger = logger;
+    private readonly HttpClient _http = factory.CreateClient("ApiClient");
+    private readonly ILogger<RegisterService> _logger = logger;
 
     public async Task<bool> RegisterUser(RegisterFormDataDto registerDto)
     {
         try
         {
             using var response = await _http.PostAsJsonAsync(registerUrl, registerDto);
+            var responseBody = await response.Content.ReadAsStringAsync();
 
-            _logger.LogError("response@@@@@@@", response);
             if (!response.IsSuccessStatusCode)
             {
+                _logger.LogWarning(
+                    "Register failed with status code {StatusCode}. Response body: {Body}",
+                    response.StatusCode,
+                    responseBody);
                 return false;
             }
 
-            _logger.LogError("response@@@@@@@", response);
             var result =
                 await response.Content
                     .ReadFromJsonAsync<ApiResponse<RegisterResponseDto>>();
+
+            if (result is null || result.Response is null)
+            {
+                _logger.LogWarning(
+                    "Register response body could not be parsed as RegisterResponseDto. Body: {Body}",
+                    responseBody);
+                return false;
+            }
+
             return true;
         }
         catch (HttpRequestException ex)
         {
-            _logger.LogError("HttpRequestException: error in register user", ex);
+            _logger.LogError(ex, "HTTP request failed for register user");
             return false;
         }
         catch (Exception ex)
         {
-            _logger.LogError("Exception:error in register user", ex);
+            _logger.LogError(ex, "Unexpected register user error");
             return false;
         }
 

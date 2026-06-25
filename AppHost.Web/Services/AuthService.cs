@@ -8,12 +8,12 @@ using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 
 public class AuthService(
-    HttpClient http,
+IHttpClientFactory factory,
     TokenService tokenService,
     AuthenticationStateProvider authProvider,
     ILogger<AuthService> logger)
 {
-    private readonly HttpClient _http = http;
+    private readonly HttpClient _http = factory.CreateClient("ApiClient");
     private readonly TokenService _tokenService = tokenService;
     private readonly CustomAuthenticationStateProvider _authProvider =
             (CustomAuthenticationStateProvider)authProvider;
