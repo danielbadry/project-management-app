@@ -2,82 +2,43 @@ namespace AppHost.Web.Services;
 
 using AppHost.Web.Authentication;
 using Shared.Dtos.Login;
-using Shared.Dtos;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.Logging;
-using System.Net.Http.Json;
 
 public class AuthService(
-IHttpClientFactory factory,
+    ApiClient apiClient,
     TokenService tokenService,
-    AuthenticationStateProvider authProvider,
-    ILogger<AuthService> logger)
+    AuthenticationStateProvider authProvider)
 {
-    private readonly HttpClient _http = factory.CreateClient("ApiClient");
+    private readonly ApiClient _apiClient = apiClient;
     private readonly TokenService _tokenService = tokenService;
     private readonly CustomAuthenticationStateProvider _authProvider =
             (CustomAuthenticationStateProvider)authProvider;
-    private readonly ILogger<AuthService> _logger = logger;
 
-    public async Task<bool> Login(
+    public async Task<ServiceResult> Login(
         string username,
         string password)
     {
-        try
-        {
-            _logger.LogInformation("Attempting login for user {Username}", username);
-
-            var response =
-                await _http.PostAsJsonAsync(
-                    "api/auth",
-                    new
-                    {
-                        Username = username,
-                        Password = password
-                    });
-
-            var responseBody = await response.Content.ReadAsStringAsync();
-            _logger.LogInformation(
-                "Login response status code: {StatusCode}, body: {Body}",
-                response.StatusCode,
-                responseBody);
-
-            if (!response.IsSuccessStatusCode)
+        var result = await _apiClient.PostAsync<LoginResponseDto>(
+            "api/auth",
+            new
             {
-                _logger.LogWarning(
-                    "Login failed with status code {StatusCode}",
-                    response.StatusCode);
-                return false;
-            }
+                Username = username,
+                Password = password
+            },
+            "login",
+            "Login failed. Please check your username and password.");
 
-            var result =
-                await response.Content
-                    .ReadFromJsonAsync<ApiResponse<LoginResponseDto>>();
-
-            if (result is null || result.Response is null)
-            {
-                _logger.LogWarning("Login response body could not be parsed as LoginResponseDto.");
-                return false;
-            }
-
-            await _tokenService.SetTokenAsync(
-                result.Response.Token);
-
-            _authProvider.NotifyUserAuthenticated(
-                result.Response.Token);
-
-            return true;
-        }
-        catch (HttpRequestException ex)
+        if (!result.Succeeded || result.Data is null)
         {
-            _logger.LogError(ex, "HTTP request failed for login");
-            return false;
+            return ServiceResult.Failure(
+                result.ErrorMessage ?? "Login failed. Please try again.");
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unexpected login error");
-            return false;
-        }
+
+        await _tokenService.SetTokenAsync(result.Data.Token);
+
+        _authProvider.NotifyUserAuthenticated(result.Data.Token);
+
+        return ServiceResult.Success();
     }
 
     public async Task Logout()

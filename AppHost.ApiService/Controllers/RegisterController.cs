@@ -13,9 +13,10 @@ public class RegisterController : ControllerBase
     [HttpPost]
     public IActionResult RegisterUser([FromBody] RegisterFormDataDto request)
     {
+
         if (request == null)
         {
-            return BadRequest("No login request provided");
+            return BadRequest("No register request provided");
         }
 
         if (request.ConfirmPassword != request.Password)

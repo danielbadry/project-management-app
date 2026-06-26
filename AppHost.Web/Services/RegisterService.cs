@@ -1,54 +1,40 @@
-using Shared.Dtos;
-using Shared.Dtos.Register;
 namespace AppHost.Web.Services;
 
-public class RegisterService(IHttpClientFactory factory, ILogger<RegisterService> logger)
+using AppHost.Web.Authentication;
+using Microsoft.AspNetCore.Components.Authorization;
+using Shared.Dtos.Register;
+
+public class RegisterService(ApiClient apiClient,
+    TokenService tokenService,
+    AuthenticationStateProvider authProvider)
 {
     private readonly string registerUrl = "api/register";
-    private readonly HttpClient _http = factory.CreateClient("ApiClient");
-    private readonly ILogger<RegisterService> _logger = logger;
+    private readonly ApiClient _apiClient = apiClient;
 
-    public async Task<bool> RegisterUser(RegisterFormDataDto registerDto)
+    private readonly TokenService _tokenService = tokenService;
+    private readonly CustomAuthenticationStateProvider _authProvider =
+            (CustomAuthenticationStateProvider)authProvider;
+
+    public async Task<ServiceResult> RegisterUser(
+        RegisterFormDataDto registerDto)
     {
-        try
+        var result = await _apiClient.PostAsync<RegisterResponseDto>(
+           registerUrl,
+           registerDto,
+           "register user",
+           "Registration failed. Please check your details.");
+
+
+        if (!result.Succeeded || result.Data is null)
         {
-            using var response = await _http.PostAsJsonAsync(registerUrl, registerDto);
-            var responseBody = await response.Content.ReadAsStringAsync();
-
-            if (!response.IsSuccessStatusCode)
-            {
-                _logger.LogWarning(
-                    "Register failed with status code {StatusCode}. Response body: {Body}",
-                    response.StatusCode,
-                    responseBody);
-                return false;
-            }
-
-            var result =
-                await response.Content
-                    .ReadFromJsonAsync<ApiResponse<RegisterResponseDto>>();
-
-            if (result is null || result.Response is null)
-            {
-                _logger.LogWarning(
-                    "Register response body could not be parsed as RegisterResponseDto. Body: {Body}",
-                    responseBody);
-                return false;
-            }
-
-            return true;
-        }
-        catch (HttpRequestException ex)
-        {
-            _logger.LogError(ex, "HTTP request failed for register user");
-            return false;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unexpected register user error");
-            return false;
+            return ServiceResult.Failure(
+                result.ErrorMessage ?? "Login failed. Please try again.");
         }
 
+        await _tokenService.SetTokenAsync(result.Data.Token);
+
+        _authProvider.NotifyUserAuthenticated(result.Data.Token);
+
+        return ServiceResult.Success();
     }
-
 }

@@ -43,6 +43,11 @@
                 <ValidationMessage For="@(() => RegisterDto.ConfirmPassword)" />
             </div>
 
+            @if (!string.IsNullOrWhiteSpace(RegisterErrorMessage))
+            {
+                <div class="form-error" role="alert">@RegisterErrorMessage</div>
+            }
+
             <button class="login-button" type="submit">Register</button>
         </EditForm>
     </div>

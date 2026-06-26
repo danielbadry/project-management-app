@@ -6,6 +6,8 @@ public partial class Login
 {
     public Dtos.Login LoginDto { set; get; } = new();
 
+    private string? LoginErrorMessage { get; set; }
+
     [Inject]
     private AuthService AuthService { get; set; } = null!;
 
@@ -14,15 +16,20 @@ public partial class Login
 
     public async Task HandleLogin()
     {
-        var success =
+        LoginErrorMessage = null;
+
+        var result =
                     await AuthService.Login(
                         LoginDto.Username,
                         LoginDto.Password);
 
-        if (success)
+        if (result.Succeeded)
         {
-            Navigation.NavigateTo("/");
+            Navigation.NavigateTo("/dashboard");
+            return;
         }
+
+        LoginErrorMessage = result.ErrorMessage;
     }
 
 }

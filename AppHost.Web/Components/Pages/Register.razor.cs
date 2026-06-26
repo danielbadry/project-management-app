@@ -8,6 +8,8 @@ public partial class Register
 {
     public RegisterFormDataDto RegisterDto { set; get; } = new();
 
+    private string? RegisterErrorMessage { get; set; }
+
     [Inject]
     private RegisterService RegisterService { get; set; } = default!;
 
@@ -16,12 +18,17 @@ public partial class Register
 
     public async Task HandleRegister()
     {
-        var success = await RegisterService.RegisterUser(RegisterDto);
+        RegisterErrorMessage = null;
 
-        if (success)
+        var result = await RegisterService.RegisterUser(RegisterDto);
+
+        if (result.Succeeded)
         {
-            Navigation.NavigateTo("/");
+            Navigation.NavigateTo("/dashboard");
+            return;
         }
+
+        RegisterErrorMessage = result.ErrorMessage;
     }
 
 }

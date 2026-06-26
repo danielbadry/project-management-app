@@ -30,6 +30,11 @@
                 <ValidationMessage For="@(() => LoginDto.Password)" />
             </div>
 
+            @if (!string.IsNullOrWhiteSpace(LoginErrorMessage))
+            {
+                <div class="form-error" role="alert">@LoginErrorMessage</div>
+            }
+
             <button class="login-button" type="submit">Login</button>
         </EditForm>
     </div>
