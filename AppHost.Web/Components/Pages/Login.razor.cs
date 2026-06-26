@@ -12,7 +12,25 @@ public partial class Login
     private AuthService AuthService { get; set; } = null!;
 
     [Inject]
+    private TokenService TokenService { get; set; } = null!;
+
+    [Inject]
     private NavigationManager Navigation { get; set; } = null!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        var token = await TokenService.GetTokenAsync();
+
+        if (!string.IsNullOrWhiteSpace(token))
+        {
+            Navigation.NavigateTo("/dashboard");
+        }
+    }
 
     public async Task HandleLogin()
     {
