@@ -38,6 +38,28 @@
   align-items: center;
 }
 
+.logout-button {
+  margin-left: auto;
+  padding: 0.55rem 1rem;
+  color: #fff;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.logout-button:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: #fff;
+}
+
+.logout-button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
 .nav-item {
   position: relative;
   display: flex;

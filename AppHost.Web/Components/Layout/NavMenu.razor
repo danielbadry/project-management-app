@@ -11,5 +11,27 @@
                 <span class="label">Dashboard</span>
             </NavLink>
         </div>
+
+        <AuthorizeView>
+            <Authorized>
+                <button type="button" class="logout-button" @onclick="HandleLogout">
+                    Logout
+                </button>
+            </Authorized>
+        </AuthorizeView>
     </div>
 </nav>
+
+@code {
+    [Inject]
+    private AppHost.Web.Services.AuthService AuthService { get; set; } = null!;
+
+    [Inject]
+    private NavigationManager Navigation { get; set; } = null!;
+
+    private async Task HandleLogout()
+    {
+        await AuthService.Logout();
+        Navigation.NavigateTo("/login");
+    }
+}
