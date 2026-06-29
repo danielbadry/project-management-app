@@ -1,39 +1,32 @@
 namespace AppHost.ApiService.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
-using Shared.Dtos;
 using Shared.Dtos.Register;
+using AppHost.ApiService.Services.Identity;
 
 
 [ApiController]
 [Route("api/register")]
 public class RegisterController : ControllerBase
 {
+    private readonly IRegisterService _registerService;
 
-    [HttpPost]
-    public IActionResult RegisterUser([FromBody] RegisterFormDataDto request)
+    public RegisterController(IRegisterService registerService)
     {
-
-        if (request == null)
-        {
-            return BadRequest("No register request provided");
-        }
-
-        if (request.ConfirmPassword != request.Password)
-        {
-            return BadRequest("password is wrong");
-        }
-
-        return Ok(new ApiResponse<RegisterResponseDto>
-        {
-            Message = "success login",
-            Response = new RegisterResponseDto
-            {
-                Token = "eyJhbGciOiJIUzI1NiJ9." +
-                "eyJuYW1lIjoiRGFuaWVsIiwicm9sZSI6IkFkbWluIn0." +
-                "fake-signature"
-            }
-        });
+        _registerService = registerService;
     }
 
+    [HttpPost]
+    public async Task<IActionResult> RegisterUser(
+        [FromBody] RegisterFormDataDto request)
+    {
+        var result = await _registerService.RegisterAsync(request);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result.Message);
+        }
+
+        return Ok(result);
+    }
 }
