@@ -4,28 +4,26 @@ using Microsoft.AspNetCore.Mvc;
 using AppHost.ApiService.Dtos;
 using Shared.Dtos;
 using Shared.Dtos.Login;
+using AppHost.ApiService.Services.Identity;
 
 [ApiController]
 [Route("api/auth")]
-public class AuthController : ControllerBase
+public class AuthController(IAuthenticationService authenticationService) : ControllerBase
 {
-    [HttpPost]
-    public IActionResult Login([FromBody] LoginRequestDto request)
-    {
-        if (request == null)
-        {
-            return BadRequest("No login request provided");
-        }
+    private readonly IAuthenticationService _authenticationService = authenticationService;
 
-        return Ok(new ApiResponse<LoginResponseDto>
+    [HttpPost]
+    public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
+    {
+        var result = await _authenticationService.LoginAsync(request);
+
+        if (!result.IsSuccess)
         {
-            Message = "success login",
-            Response = new LoginResponseDto
-            {
-                Token = "eyJhbGciOiJIUzI1NiJ9." +
-                "eyJuYW1lIjoiRGFuaWVsIiwicm9sZSI6IkFkbWluIn0." +
-                "fake-signature"
-            }
-        });
+            return BadRequest(result.Message);
+        }
+        else
+        {
+            return Ok(result);
+        }
     }
 }

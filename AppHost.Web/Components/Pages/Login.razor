@@ -19,14 +19,15 @@
 
             <div class="field">
                 <label for="username">Username</label>
-                <InputText id="username" class="field-input" @bind-Value="LoginDto.Username" autocomplete="username" />
+                <input id="username" name="username" class="field-input" autocomplete="username"
+                       @bind="LoginDto.Username" @bind:event="oninput" />
                 <ValidationMessage For="@(() => LoginDto.Username)" />
             </div>
 
             <div class="field">
                 <label for="password">Password</label>
-                <InputText id="password" type="password" class="field-input" @bind-Value="LoginDto.Password"
-                           autocomplete="current-password" />
+                <input id="password" name="password" type="password" class="field-input" autocomplete="current-password"
+                       @bind="LoginDto.Password" @bind:event="oninput" />
                 <ValidationMessage For="@(() => LoginDto.Password)" />
             </div>
 

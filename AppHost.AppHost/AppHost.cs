@@ -1,7 +1,6 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var apiService = builder.AddProject<Projects.AppHost_ApiService>("apiservice")
-    .WithHttpHealthCheck("/health");
+var apiService = builder.AddProject<Projects.AppHost_ApiService>("apiservice");
 
 builder.AddProject<Projects.AppHost_Web>("webfrontend")
     .WithExternalHttpEndpoints()
