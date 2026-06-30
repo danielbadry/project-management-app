@@ -55,7 +55,9 @@ public class RegisterService : IRegisterService
         return ApiResponse<RegisterResponseDto>.Success(
             new RegisterResponseDto
             {
-                Token = "temporary-token"
+                Token = "eyJhbGciOiJIUzI1NiJ9." +
+                "eyJuYW1lIjoiRGFuaWVsIiwicm9sZSI6IkFkbWluIn0." +
+                "fake-signature"
             },
             "User registered successfully");
     }

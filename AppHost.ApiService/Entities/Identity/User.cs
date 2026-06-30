@@ -10,7 +10,8 @@ public class User
     public const string TableName = "Users";
 
     [Key]
-    public Guid Id { get; set; } = Guid.NewGuid();
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
 
     [Required]
     [MaxLength(100)]

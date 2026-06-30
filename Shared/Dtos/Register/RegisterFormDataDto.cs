@@ -6,22 +6,22 @@ public class RegisterFormDataDto
 {
     [Required]
     [MinLength(5)]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     [Required]
     [EmailAddress]
-    public string Email { get; set; }
+    public string Email { get; set; } = string.Empty;
 
     [Required]
     [MinLength(3)]
-    public string Username { get; set; }
+    public string Username { get; set; } = string.Empty;
 
     [Required]
     [MinLength(5)]
-    public string Password { get; set; }
+    public string Password { get; set; } = string.Empty;
 
     [Required]
     [MinLength(5)]
-    public string ConfirmPassword { get; set; }
+    public string ConfirmPassword { get; set; } = string.Empty;
 
 }
