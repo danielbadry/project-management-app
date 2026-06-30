@@ -9,10 +9,14 @@ namespace AppHost.ApiService.Services.Identity;
 public class RegisterService : IRegisterService
 {
     private readonly AppDbContext _dbContext;
+    private readonly IJwtTokenService _jwtTokenService;
 
-    public RegisterService(AppDbContext dbContext)
+    public RegisterService(
+        AppDbContext dbContext,
+        IJwtTokenService jwtTokenService)
     {
         _dbContext = dbContext;
+        _jwtTokenService = jwtTokenService;
     }
 
     public async Task<ApiResponse<RegisterResponseDto>> RegisterAsync(
@@ -55,9 +59,7 @@ public class RegisterService : IRegisterService
         return ApiResponse<RegisterResponseDto>.Success(
             new RegisterResponseDto
             {
-                Token = "eyJhbGciOiJIUzI1NiJ9." +
-                "eyJuYW1lIjoiRGFuaWVsIiwicm9sZSI6IkFkbWluIn0." +
-                "fake-signature"
+                Token = _jwtTokenService.CreateToken(user)
             },
             "User registered successfully");
     }

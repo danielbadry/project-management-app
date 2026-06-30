@@ -9,10 +9,14 @@ namespace AppHost.ApiService.Services.Identity;
 public class AuthenticationService : IAuthenticationService
 {
     private readonly AppDbContext _dbContext;
+    private readonly IJwtTokenService _jwtTokenService;
 
-    public AuthenticationService(AppDbContext dbContext)
+    public AuthenticationService(
+        AppDbContext dbContext,
+        IJwtTokenService jwtTokenService)
     {
         _dbContext = dbContext;
+        _jwtTokenService = jwtTokenService;
     }
 
     public async Task<ApiResponse<LoginResponseDto>> LoginAsync(LoginRequestDto request)
@@ -33,9 +37,7 @@ public class AuthenticationService : IAuthenticationService
         {
             return ApiResponse<LoginResponseDto>.Success(new LoginResponseDto
             {
-                Token = "eyJhbGciOiJIUzI1NiJ9." +
-                "eyJuYW1lIjoiRGFuaWVsIiwicm9sZSI6IkFkbWluIn0." +
-                "fake-signature"
+                Token = _jwtTokenService.CreateToken(user)
             });
         }
 

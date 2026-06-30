@@ -21,12 +21,14 @@ public class CustomAuthenticationStateProvider
 
         if (string.IsNullOrWhiteSpace(token))
         {
-            return new AuthenticationState(
-                new ClaimsPrincipal(
-                    new ClaimsIdentity()));
+            return CreateAnonymousState();
         }
 
-        var claims = ParseClaimsFromJwt(token);
+        if (!TryParseClaimsFromJwt(token, out var claims))
+        {
+            await _tokenService.RemoveTokenAsync();
+            return CreateAnonymousState();
+        }
 
         var identity =
             new ClaimsIdentity(claims, "jwt");
@@ -40,7 +42,11 @@ public class CustomAuthenticationStateProvider
     public void NotifyUserAuthenticated(
         string token)
     {
-        var claims = ParseClaimsFromJwt(token);
+        if (!TryParseClaimsFromJwt(token, out var claims))
+        {
+            NotifyUserLoggedOut();
+            return;
+        }
 
         var identity = new ClaimsIdentity(
             claims,
@@ -56,33 +62,57 @@ public class CustomAuthenticationStateProvider
 
     public void NotifyUserLoggedOut()
     {
-        var anonymous =
-            new ClaimsPrincipal(
-                new ClaimsIdentity());
-
         NotifyAuthenticationStateChanged(
             Task.FromResult(
-                new AuthenticationState(
-                    anonymous)));
+                CreateAnonymousState()));
     }
 
-    private static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
-    {
-        var payload = jwt.Split('.')[1];
-        var jsonBytes = ParseBase64WithoutPadding(payload);
-        var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
+    private static AuthenticationState CreateAnonymousState() =>
+        new(new ClaimsPrincipal(new ClaimsIdentity()));
 
-        return keyValuePairs?.Select(kvp =>
-            new Claim(kvp.Key, kvp.Value?.ToString() ?? string.Empty))
-            ?? Enumerable.Empty<Claim>();
+    private static bool TryParseClaimsFromJwt(
+        string jwt,
+        out IEnumerable<Claim> claims)
+    {
+        claims = Enumerable.Empty<Claim>();
+        var segments = jwt.Split('.');
+
+        if (segments.Length != 3 || string.IsNullOrWhiteSpace(segments[1]))
+        {
+            return false;
+        }
+
+        try
+        {
+            var jsonBytes = ParseBase64UrlWithoutPadding(segments[1]);
+            var keyValuePairs =
+                JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(jsonBytes);
+
+            if (keyValuePairs is null)
+            {
+                return false;
+            }
+
+            claims = keyValuePairs.Select(kvp =>
+                new Claim(kvp.Key, kvp.Value.ToString()));
+            return true;
+        }
+        catch (Exception ex) when (
+            ex is FormatException or JsonException or ArgumentException)
+        {
+            return false;
+        }
     }
 
-    private static byte[] ParseBase64WithoutPadding(string base64)
+    private static byte[] ParseBase64UrlWithoutPadding(string base64)
     {
+        base64 = base64.Replace('-', '+').Replace('_', '/');
+
         switch (base64.Length % 4)
         {
             case 2: base64 += "=="; break;
             case 3: base64 += "="; break;
+            case 1: throw new FormatException("Invalid Base64Url value.");
         }
 
         return Convert.FromBase64String(base64);

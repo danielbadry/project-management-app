@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using AppHost.ApiService.Data;
 using AppHost.ApiService.Services.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +25,42 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(connectionString);
 });
+
+var jwtOptions = builder.Configuration
+    .GetSection(JwtOptions.SectionName)
+    .Get<JwtOptions>()
+    ?? throw new InvalidOperationException("JWT configuration was not found.");
+
+if (string.IsNullOrWhiteSpace(jwtOptions.Key) ||
+    Encoding.UTF8.GetByteCount(jwtOptions.Key) < 32)
+{
+    throw new InvalidOperationException(
+        "JWT signing key must be configured and contain at least 32 bytes.");
+}
+
+builder.Services.Configure<JwtOptions>(
+    builder.Configuration.GetSection(JwtOptions.SectionName));
+builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = jwtOptions.Issuer,
+            ValidateAudience = true,
+            ValidAudience = jwtOptions.Audience,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwtOptions.Key)),
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.FromMinutes(1)
+        };
+    });
+builder.Services.AddAuthorization();
+
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 var app = builder.Build();
@@ -33,6 +72,9 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 app.MapDefaultEndpoints();
