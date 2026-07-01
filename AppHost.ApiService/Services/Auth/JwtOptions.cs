@@ -1,4 +1,4 @@
-namespace AppHost.ApiService.Services.Identity;
+namespace AppHost.ApiService.Services.Auth;
 
 public sealed class JwtOptions
 {

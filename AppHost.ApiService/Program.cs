@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using AppHost.ApiService.Data;
-using AppHost.ApiService.Services.Identity;
+using AppHost.ApiService.Services.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;

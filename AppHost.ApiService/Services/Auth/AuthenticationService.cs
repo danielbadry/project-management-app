@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Shared.Dtos;
 using Shared.Dtos.Login;
 
-namespace AppHost.ApiService.Services.Identity;
+namespace AppHost.ApiService.Services.Auth;
 
 public class AuthenticationService : IAuthenticationService
 {

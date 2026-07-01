@@ -1,11 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using AppHost.ApiService.Entities.Identity;
+using AppHost.ApiService.Entities.Auth;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace AppHost.ApiService.Services.Identity;
+namespace AppHost.ApiService.Services.Auth;
 
 public sealed class JwtTokenService : IJwtTokenService
 {

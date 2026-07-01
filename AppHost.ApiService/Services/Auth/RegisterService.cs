@@ -1,10 +1,10 @@
 using AppHost.ApiService.Data;
-using AppHost.ApiService.Entities.Identity;
+using AppHost.ApiService.Entities.Auth;
 using Microsoft.EntityFrameworkCore;
 using Shared.Dtos;
 using Shared.Dtos.Register;
 
-namespace AppHost.ApiService.Services.Identity;
+namespace AppHost.ApiService.Services.Auth;
 
 public class RegisterService : IRegisterService
 {

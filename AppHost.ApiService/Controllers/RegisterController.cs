@@ -2,7 +2,7 @@ namespace AppHost.ApiService.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos.Register;
-using AppHost.ApiService.Services.Identity;
+using AppHost.ApiService.Services.Auth;
 
 
 [ApiController]

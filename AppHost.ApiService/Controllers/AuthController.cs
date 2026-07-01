@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using AppHost.ApiService.Dtos;
 using Shared.Dtos;
 using Shared.Dtos.Login;
-using AppHost.ApiService.Services.Identity;
+using AppHost.ApiService.Services.Auth;
 
 [ApiController]
 [Route("api/auth")]

@@ -1,34 +1,24 @@
-namespace AppHost.ApiService.Entities.Auth;
+namespace AppHost.ApiService.Entities.ProjectManagement;
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 [Table(TableName, Schema = SchemaName)]
-public class User
+public class Projects
 {
-    public const string SchemaName = "Auth";
-    public const string TableName = "Users";
+    public const string SchemaName = "ProjectManagement";
+    public const string TableName = "Projects";
 
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
     [Required]
-    [MaxLength(100)]
+    [MaxLength(32)]
     public string Name { get; set; } = string.Empty;
 
-    [Required]
-    [EmailAddress]
     [MaxLength(256)]
-    public string Email { get; set; } = string.Empty;
-
-    [Required]
-    [MaxLength(100)]
-    public string Username { get; set; } = string.Empty;
-
-    [Required]
-    [MaxLength(512)]
-    public string PasswordHash { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
 
     public bool IsActive { get; set; } = true;
 
