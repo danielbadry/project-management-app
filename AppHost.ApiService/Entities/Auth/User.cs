@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 [Table(TableName, Schema = SchemaName)]
 public class User
 {
-    public const string SchemaName = "Identity";
+    public const string SchemaName = "Auth";
     public const string TableName = "Users";
 
     [Key]
