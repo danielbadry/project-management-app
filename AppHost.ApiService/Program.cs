@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using AppHost.ApiService.Data;
 using AppHost.ApiService.Services.Auth;
+using AppHost.ApiService.Services.ProjectManagement;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -62,6 +63,7 @@ builder.Services
 builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IRegisterService, RegisterService>();
+builder.Services.AddScoped<IProjectsService, ProjectsService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 var app = builder.Build();
 

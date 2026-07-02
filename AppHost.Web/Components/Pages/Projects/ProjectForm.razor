@@ -19,63 +19,57 @@
             </div>
         </header>
 
-        <EditForm Model="@ProjectFormRequestDto"
-                  FormName="ProjectForm"
-                  OnValidSubmit="HandleSave"
+        <EditForm Model="@_projectFormRequestDto" FormName="ProjectForm" OnValidSubmit="HandleSave"
                   class="project-form">
             <DataAnnotationsValidator />
 
             <div class="field">
                 <div class="field-heading">
                     <label for="name">Project name</label>
-                    <span>@ProjectFormRequestDto.Name.Length/32</span>
+                    <span>@_projectFormRequestDto.Name.Length/32</span>
                 </div>
-                <input id="name" name="name" class="field-input"
-                       maxlength="32" autocomplete="off"
-                       placeholder="e.g. Website redesign"
-                       aria-describedby="name-help"
-                       @bind="ProjectFormRequestDto.Name"
+                <input id="name" name="name" class="field-input" maxlength="32" autocomplete="off"
+                       placeholder="e.g. Website redesign" aria-describedby="name-help" @bind="_projectFormRequestDto.Name"
                        @bind:event="oninput" />
                 <span id="name-help" class="field-help">Use a short, recognizable name for your team.</span>
-                <ValidationMessage For="@(() => ProjectFormRequestDto.Name)" />
+                <ValidationMessage For="@(() => _projectFormRequestDto.Name)" />
             </div>
 
             <div class="field">
                 <div class="field-heading">
                     <label for="description">Description <span class="optional">Optional</span></label>
-                    <span>@ProjectFormRequestDto.Description.Length/256</span>
+                    <span>@_projectFormRequestDto.Description.Length/256</span>
                 </div>
-                <textarea id="description" name="description" class="field-input description-input"
-                          maxlength="256" rows="5"
-                          placeholder="What is this project trying to accomplish?"
-                          aria-describedby="description-help"
-                          @bind="ProjectFormRequestDto.Description"
+                <textarea id="description" name="description" class="field-input description-input" maxlength="256"
+                          rows="5" placeholder="What is this project trying to accomplish?"
+                          aria-describedby="description-help" @bind="_projectFormRequestDto.Description"
                           @bind:event="oninput"></textarea>
-                <span id="description-help" class="field-help">A concise summary helps everyone understand the goal.</span>
-                <ValidationMessage For="@(() => ProjectFormRequestDto.Description)" />
-            </div>
+                <span id="description-help" class="field-help">A concise summary helps everyone understand the
+                    goal.</span>
+                    <ValidationMessage For="@(() => _projectFormRequestDto.Description)" />
+                </div>
 
-            <label class="status-option" for="is-active">
-                <input id="is-active" type="checkbox" @bind="ProjectFormRequestDto.IsActive" />
-                <span class="status-copy">
-                    <strong>Active project</strong>
-                    <small>Make this project available to the team immediately.</small>
-                </span>
-                <span class="toggle" aria-hidden="true"></span>
-            </label>
+                <label class="status-option" for="is-active">
+                    <input id="is-active" type="checkbox" @bind="_projectFormRequestDto.IsActive" />
+                    <span class="status-copy">
+                        <strong>Active project</strong>
+                        <small>Make this project available to the team immediately.</small>
+                    </span>
+                    <span class="toggle" aria-hidden="true"></span>
+                </label>
 
-            @if (!string.IsNullOrWhiteSpace(ProjectFormErrorMessage))
-            {
-                <div class="form-error" role="alert">@ProjectFormErrorMessage</div>
-            }
+                @if (!string.IsNullOrWhiteSpace(_projectFormErrorMessage))
+                {
+                    <div class="form-error" role="alert">@_projectFormErrorMessage</div>
+                }
 
-            <div class="form-actions">
-                <a class="cancel-button" href="dashboard">Cancel</a>
-                <button class="save-button" type="submit">
-                    <span aria-hidden="true">+</span>
-                    Create project
-                </button>
-            </div>
-        </EditForm>
-    </div>
-</section>
+                <div class="form-actions">
+                    <a class="cancel-button" href="dashboard">Cancel</a>
+                    <button class="save-button" type="submit">
+                        <span aria-hidden="true">+</span>
+                        Create project
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </section>

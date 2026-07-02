@@ -1,16 +1,34 @@
 using Shared.Dtos.ProjectForm;
-
+using AppHost.Web.Services;
+using Microsoft.AspNetCore.Components;
+using System.Text;
 namespace AppHost.Web.Components.Pages.Projects;
 
 public partial class ProjectForm()
 {
-    public ProjectFormRequestDto ProjectFormRequestDto { set; get; } = new();
+    private readonly ProjectFormRequestDto _projectFormRequestDto = new();
+    private string _projectFormErrorMessage = string.Empty;
 
-    public string ProjectFormErrorMessage { set; get; } = string.Empty;
+    [Inject]
+    private ProjectsService ProjectsService { set; get; } = default!;
 
-    public async Task<bool> HandleSave()
+    [Inject]
+    private NavigationManager Navigation { get; set; } = null!;
+
+    public async Task HandleSave()
     {
-        return true;
+        _projectFormErrorMessage = "";
+
+        var result = await ProjectsService.HandleSave(_projectFormRequestDto);
+        if (result.Succeeded && result.Data is not null)
+        {
+            Navigation.NavigateTo($"/project/{result.Data.Id}");
+            return;
+        }
+        else
+        {
+            _projectFormErrorMessage = result.ErrorMessage ?? "";
+        }
     }
 
 }
