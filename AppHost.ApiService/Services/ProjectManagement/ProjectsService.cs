@@ -2,6 +2,7 @@ using AppHost.ApiService.Data;
 using AppHost.ApiService.Entities.ProjectManagement;
 using Shared.Dtos;
 using Shared.Dtos.ProjectForm;
+using Microsoft.EntityFrameworkCore;
 
 namespace AppHost.ApiService.Services.ProjectManagement;
 
@@ -34,6 +35,23 @@ public class ProjectsService : IProjectsService
 
         return ApiResponse<ProjectFormResponseDto>.Success(new ProjectFormResponseDto { Id = project.Id, Name = project.Name, Description = project.Description });
 
+    }
+    public async Task<ApiResponse<List<ProjectFormResponseDto>>> GetProjectListAsync()
+    {
+        var projects = await _dbContext.Projects
+            .AsNoTracking()
+            .Select(project => new ProjectFormResponseDto
+            {
+                Id = project.Id,
+                Name = project.Name,
+                Description = project.Description,
+                IsActive = project.IsActive
+            })
+            .ToListAsync();
+
+        return ApiResponse<List<ProjectFormResponseDto>>.Success(
+            projects,
+            "Projects loaded successfully");
     }
 
 }

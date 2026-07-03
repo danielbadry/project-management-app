@@ -7,4 +7,7 @@ public interface IProjectsService
 {
     Task<ApiResponse<ProjectFormResponseDto>> CreateProjectAsync(
         ProjectFormRequestDto request);
+
+
+    Task<ApiResponse<List<ProjectFormResponseDto>>> GetProjectListAsync();
 }

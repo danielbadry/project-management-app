@@ -28,4 +28,18 @@ public class ProjectsController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetProjectList()
+    {
+        var result = await _projectService.GetProjectListAsync();
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result.Message);
+        }
+
+        return Ok(result);
+
+    }
 }
