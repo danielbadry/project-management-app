@@ -1,7 +1,9 @@
 @page "/projects/create"
+@using AppHost.Web.Components.Pages.Projects.Components
 
 @attribute [RequireAuthentication]
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>Create project</PageTitle>
+<ProjectForm />
