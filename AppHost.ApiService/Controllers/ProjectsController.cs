@@ -1,10 +1,12 @@
 namespace AppHost.ApiService.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using AppHost.ApiService.Services.ProjectManagement;
 using Shared.Dtos.ProjectForm;
 
 [ApiController]
+[Authorize]
 [Route("api/projects")]
 public class ProjectsController : ControllerBase
 {
