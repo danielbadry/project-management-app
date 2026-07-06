@@ -168,6 +168,57 @@ public class ApiClient(IHttpClientFactory factory, ILogger<ApiClient> logger)
         }
     }
 
+    public async Task<ServiceResult<TResponse>> DeleteAsync<TResponse>(
+        string url,
+        string operationName,
+        string fallbackErrorMessage = "Request failed. Please try again.")
+    {
+        try
+        {
+            using var response = await _http.DeleteAsync(url);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogWarning(
+                    "{OperationName} failed with status code {StatusCode}. Response body: {Body}",
+                    operationName,
+                    response.StatusCode,
+                    responseBody);
+
+                return ServiceResult<TResponse>.Failure(
+                    GetErrorMessage(responseBody, fallbackErrorMessage));
+            }
+
+            var apiResponse = JsonSerializer.Deserialize<ApiResponse<TResponse>>(
+                responseBody,
+                JsonOptions);
+
+            if (apiResponse is null || apiResponse.Response is null)
+            {
+                _logger.LogWarning(
+                    "{OperationName} response body could not be parsed as ApiResponse<{ResponseType}>. Body: {Body}",
+                    operationName,
+                    typeof(TResponse).Name,
+                    responseBody);
+
+                return ServiceResult<TResponse>.Failure(fallbackErrorMessage);
+            }
+
+            return ServiceResult<TResponse>.Success(apiResponse.Response);
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, "HTTP request failed for {OperationName}", operationName);
+            return ServiceResult<TResponse>.Failure("Could not reach the API. Please try again.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected API error for {OperationName}", operationName);
+            return ServiceResult<TResponse>.Failure(fallbackErrorMessage);
+        }
+    }
+
     private static string GetErrorMessage(string responseBody, string fallbackErrorMessage)
     {
         if (string.IsNullOrWhiteSpace(responseBody))

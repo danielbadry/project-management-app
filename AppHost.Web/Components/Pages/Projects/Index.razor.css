@@ -47,6 +47,7 @@
 .empty-icon { color:#277268; background:#edf7f5; }
 .empty-icon svg { width:1.8rem; fill:none; stroke:currentColor; stroke-linejoin:round; stroke-width:1.5; }
 .retry-button { cursor:pointer; }
+.action-error { padding:.8rem 1rem; color:#9f1d1d; border:1px solid #efc3c1; border-radius:10px; background:#fff5f4; font-size:.88rem; font-weight:600; }
 
 @media (max-width:720px) {
     .projects-heading { align-items:stretch; flex-direction:column; }

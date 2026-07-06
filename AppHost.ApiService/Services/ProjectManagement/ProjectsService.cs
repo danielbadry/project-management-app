@@ -125,4 +125,23 @@ public class ProjectsService : IProjectsService
             "Project updated successfully");
     }
 
+    public async Task<ApiResponse<bool>> DeleteProjectAsync(int id)
+    {
+        if (id <= 0)
+        {
+            return ApiResponse<bool>.Fail("The project ID is invalid.");
+        }
+
+        var project = await _dbContext.Projects.FindAsync(id);
+        if (project is null)
+        {
+            return ApiResponse<bool>.Fail("Project not found.");
+        }
+
+        _dbContext.Projects.Remove(project);
+        await _dbContext.SaveChangesAsync();
+
+        return ApiResponse<bool>.Success(true, "Project deleted successfully");
+    }
+
 }

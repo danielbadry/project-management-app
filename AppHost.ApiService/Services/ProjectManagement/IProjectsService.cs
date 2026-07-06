@@ -16,4 +16,6 @@ public interface IProjectsService
     Task<ApiResponse<ProjectFormResponseDto>> UpdateProjectAsync(
         int id,
         ProjectFormRequestDto request);
+
+    Task<ApiResponse<bool>> DeleteProjectAsync(int id);
 }

@@ -75,4 +75,22 @@ public class ProjectsService(ApiClient apiClient)
             "get project",
             "Loading the project failed. Please try again.");
     }
+
+    public async Task<ServiceResult> DeleteProjectAsync(int id)
+    {
+        if (id <= 0)
+        {
+            return ServiceResult.Failure("The project ID is invalid.");
+        }
+
+        var result = await _apiClient.DeleteAsync<bool>(
+            $"{projectsUrl}/{id}",
+            "delete project",
+            "Deleting the project failed. Please try again.");
+
+        return result.Succeeded && result.Data
+            ? ServiceResult.Success()
+            : ServiceResult.Failure(
+                result.ErrorMessage ?? "Deleting the project failed. Please try again.");
+    }
 }
