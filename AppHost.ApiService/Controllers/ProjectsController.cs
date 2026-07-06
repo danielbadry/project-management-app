@@ -42,4 +42,17 @@ public class ProjectsController : ControllerBase
         return Ok(result);
 
     }
+
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetProject(int id)
+    {
+        var result = await _projectService.GetProjectAsync(id);
+
+        if (!result.IsSuccess)
+        {
+            return NotFound(result);
+        }
+
+        return Ok(result);
+    }
 }

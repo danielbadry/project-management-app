@@ -58,7 +58,7 @@
             <header class="panel-heading">
                 <div>
                     <h2>All projects</h2><span>@_projectList.Count @(_projectList.Count == 1 ? "project" :
-                                                                                                  "projects")</span>
+                                                                                                                      "projects")</span>
                 </div>
             </header>
             <div class="table-scroll">
@@ -79,7 +79,7 @@
                                                                 href="@($"/projects/{project.Id}")">@project.Name</a><span
                                     class="project-id">#@project.Id</span></td>
                                     <td data-label="Description"><span
-                                        class="description">@(string.IsNullOrWhiteSpace(project.Description) ? "No description"                   : project.Description)</span></td>
+                                        class="description">@(string.IsNullOrWhiteSpace(project.Description) ? "No description"                         : project.Description)</span></td>
                                         <td data-label="Status"><span
                                             class="status-badge @(project.IsActive ? "active" : "inactive")"><span
                                             aria-hidden="true"></span>@(project.IsActive ? "Active" : "Inactive")</span></td>

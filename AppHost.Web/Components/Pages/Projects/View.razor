@@ -1,7 +1,41 @@
-@page "/projects/{id:int}"
+@page "/projects/{Id:int}"
 
 @attribute [RequireAuthentication]
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
-<PageTitle>Create project</PageTitle>
+<PageTitle>@(_projectInfo?.Name ?? "Project")</PageTitle>
+
+@if (_isLoading)
+{
+    <p role="status">Loading project...</p>
+}
+else if (!string.IsNullOrWhiteSpace(_errorMessage))
+{
+    <div class="alert alert-danger" role="alert">@_errorMessage</div>
+    <a class="btn btn-outline-secondary" href="/projects/index">Back to projects</a>
+}
+else if (_projectInfo is not null)
+{
+    <section class="card shadow-sm">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                <div>
+                    <div class="text-secondary small">Project #@_projectInfo.Id</div>
+                    <h1 class="h3 mb-0">@_projectInfo.Name</h1>
+                </div>
+                <span class="badge @(_projectInfo.IsActive ? "text-bg-success" : "text-bg-secondary")">
+                    @(_projectInfo.IsActive ? "Active" : "Inactive")
+                </span>
+            </div>
+
+            <h2 class="h6 text-secondary">Description</h2>
+            <p>@(string.IsNullOrWhiteSpace(_projectInfo.Description) ? "No description" : _projectInfo.Description)</p>
+
+            <div class="d-flex gap-2 mt-4">
+                <a class="btn btn-outline-secondary" href="/projects/index">Back</a>
+                <a class="btn btn-primary" href="@($"/projects/{_projectInfo.Id}/edit")">Edit project</a>
+            </div>
+        </div>
+    </section>
+}

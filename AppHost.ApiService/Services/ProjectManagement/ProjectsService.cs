@@ -54,4 +54,30 @@ public class ProjectsService : IProjectsService
             "Projects loaded successfully");
     }
 
+    public async Task<ApiResponse<ProjectFormResponseDto>> GetProjectAsync(int id)
+    {
+        if (id <= 0)
+        {
+            return ApiResponse<ProjectFormResponseDto>.Fail("The project ID is invalid.");
+        }
+
+        var project = await _dbContext.Projects
+            .AsNoTracking()
+            .Where(project => project.Id == id)
+            .Select(project => new ProjectFormResponseDto
+            {
+                Id = project.Id,
+                Name = project.Name,
+                Description = project.Description,
+                IsActive = project.IsActive
+            })
+            .FirstOrDefaultAsync();
+
+        return project is null
+            ? ApiResponse<ProjectFormResponseDto>.Fail("Project not found.")
+            : ApiResponse<ProjectFormResponseDto>.Success(
+                project,
+                "Project loaded successfully");
+    }
+
 }

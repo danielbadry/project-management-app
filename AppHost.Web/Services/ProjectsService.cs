@@ -43,4 +43,18 @@ public class ProjectsService(ApiClient apiClient)
         return ServiceResult<List<ProjectFormResponseDto>>.Success(result.Data);
 
     }
+
+    public async Task<ServiceResult<ProjectFormResponseDto>> GetProjectAsync(int id)
+    {
+        if (id <= 0)
+        {
+            return ServiceResult<ProjectFormResponseDto>.Failure(
+                "The project ID is invalid.");
+        }
+
+        return await _apiClient.GetAsync<ProjectFormResponseDto>(
+            $"{projectsUrl}/{id}",
+            "get project",
+            "Loading the project failed. Please try again.");
+    }
 }

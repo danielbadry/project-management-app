@@ -10,4 +10,6 @@ public interface IProjectsService
 
 
     Task<ApiResponse<List<ProjectFormResponseDto>>> GetProjectListAsync();
+
+    Task<ApiResponse<ProjectFormResponseDto>> GetProjectAsync(int id);
 }
