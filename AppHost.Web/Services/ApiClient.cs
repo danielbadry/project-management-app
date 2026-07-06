@@ -1,14 +1,19 @@
+using System.Net.Http.Headers;
 using System.Text.Json;
 using Shared.Dtos;
 
 namespace AppHost.Web.Services;
 
-public class ApiClient(IHttpClientFactory factory, ILogger<ApiClient> logger)
+public class ApiClient(
+    IHttpClientFactory factory,
+    ILogger<ApiClient> logger,
+    TokenService tokenService)
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
     private readonly HttpClient _http = factory.CreateClient("ApiClient");
     private readonly ILogger<ApiClient> _logger = logger;
+    private readonly TokenService _tokenService = tokenService;
 
     public async Task<ServiceResult<TResponse>> GetAsync<TResponse>(
         string url,
@@ -17,7 +22,8 @@ public class ApiClient(IHttpClientFactory factory, ILogger<ApiClient> logger)
     {
         try
         {
-            using var response = await _http.GetAsync(url);
+            using var request = new HttpRequestMessage(HttpMethod.Get, url);
+            using var response = await SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
@@ -70,7 +76,11 @@ public class ApiClient(IHttpClientFactory factory, ILogger<ApiClient> logger)
     {
         try
         {
-            using var response = await _http.PostAsJsonAsync(url, request);
+            using var requestMessage = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = JsonContent.Create(request, options: JsonOptions)
+            };
+            using var response = await SendAsync(requestMessage);
             var responseBody = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
@@ -123,7 +133,11 @@ public class ApiClient(IHttpClientFactory factory, ILogger<ApiClient> logger)
     {
         try
         {
-            using var response = await _http.PutAsJsonAsync(url, request);
+            using var requestMessage = new HttpRequestMessage(HttpMethod.Put, url)
+            {
+                Content = JsonContent.Create(request, options: JsonOptions)
+            };
+            using var response = await SendAsync(requestMessage);
             var responseBody = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
@@ -175,7 +189,8 @@ public class ApiClient(IHttpClientFactory factory, ILogger<ApiClient> logger)
     {
         try
         {
-            using var response = await _http.DeleteAsync(url);
+            using var request = new HttpRequestMessage(HttpMethod.Delete, url);
+            using var response = await SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
@@ -217,6 +232,19 @@ public class ApiClient(IHttpClientFactory factory, ILogger<ApiClient> logger)
             _logger.LogError(ex, "Unexpected API error for {OperationName}", operationName);
             return ServiceResult<TResponse>.Failure(fallbackErrorMessage);
         }
+    }
+
+    private async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
+    {
+        var token = await _tokenService.GetTokenAsync();
+
+        if (!string.IsNullOrWhiteSpace(token))
+        {
+            request.Headers.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+        }
+
+        return await _http.SendAsync(request);
     }
 
     private static string GetErrorMessage(string responseBody, string fallbackErrorMessage)
