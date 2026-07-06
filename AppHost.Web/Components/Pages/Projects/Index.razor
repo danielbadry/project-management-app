@@ -1,0 +1,114 @@
+@page "/projects/index"
+
+@attribute [RequireAuthentication]
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<PageTitle>Projects</PageTitle>
+
+<main class="projects-page">
+    <section class="projects-heading">
+        <div>
+            <span class="eyebrow">Workspace</span>
+            <h1>Projects</h1>
+            <p>Keep track of your projects and quickly open the work that matters.</p>
+        </div>
+        <a class="create-button" href="/projects/create">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 5v14M5 12h14" />
+            </svg>
+            New project
+        </a>
+    </section>
+
+    @if (_isLoading)
+    {
+        <section class="projects-panel loading-panel" aria-live="polite" aria-busy="true">
+            <div class="spinner" aria-hidden="true"></div>
+            <div><strong>Loading projects</strong><span>This should only take a moment.</span></div>
+        </section>
+    }
+    else if (!string.IsNullOrWhiteSpace(_errorMessage))
+    {
+        <section class="state-panel error-panel" role="alert">
+            <div>
+                <div class="state-icon">!</div>
+                <h2>Projects could not be loaded</h2>
+                <p>@_errorMessage</p>
+                <button type="button" class="retry-button" @onclick="LoadProjectsAsync">Try again</button>
+            </div>
+        </section>
+    }
+    else if (_projectList.Count == 0)
+    {
+        <section class="state-panel empty-panel">
+            <div>
+                <div class="empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24">
+                    <path d="M4 7.5h6l2 2h8v9.5H4z" />
+                    <path d="M4 7.5V5h6l2 2h8v2.5" />
+                </svg></div>
+                <h2>No projects yet</h2>
+                <p>Create your first project and it will appear here.</p>
+                <a class="create-button" href="/projects/create">Create a project</a>
+            </div>
+        </section>
+    }
+    else
+    {
+        <section class="projects-panel">
+            <header class="panel-heading">
+                <div>
+                    <h2>All projects</h2><span>@_projectList.Count @(_projectList.Count == 1 ? "project" :
+                                                                                                  "projects")</span>
+                </div>
+            </header>
+            <div class="table-scroll">
+                <table class="projects-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Project</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Status</th>
+                            <th scope="col" class="actions-heading">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var project in _projectList)
+                        {
+                            <tr>
+                                <td data-label="Project"><a class="project-name"
+                                                                href="@($"/projects/{project.Id}")">@project.Name</a><span
+                                    class="project-id">#@project.Id</span></td>
+                                    <td data-label="Description"><span
+                                        class="description">@(string.IsNullOrWhiteSpace(project.Description) ? "No description"                   : project.Description)</span></td>
+                                        <td data-label="Status"><span
+                                            class="status-badge @(project.IsActive ? "active" : "inactive")"><span
+                                            aria-hidden="true"></span>@(project.IsActive ? "Active" : "Inactive")</span></td>
+                                            <td data-label="Actions">
+                                                <div class="row-actions">
+                                                    <a class="icon-button" href="@($"/projects/{project.Id}")" title="View @project.Name"
+                                                       aria-label="View @project.Name"><svg viewBox="0 0 24 24" aria-hidden="true">
+                                                        <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+                                                        <circle cx="12" cy="12" r="2.5" />
+                                                    </svg></a>
+                                                    <a class="icon-button" href="@($"/projects/{project.Id}/edit")"
+                                                       title="Edit @project.Name" aria-label="Edit @project.Name"><svg viewBox="0 0 24 24"
+                                                                                                                    aria-hidden="true">
+                                                        <path
+                                                        d="m14.5 5.5 4 4M4 20l4.2-.9L19 8.3a1.4 1.4 0 0 0 0-2l-1.3-1.3a1.4 1.4 0 0 0-2 0L4.9 15.8 4 20Z" />
+                                                    </svg></a>
+                                                    <button class="icon-button delete" type="button" disabled
+                                                            title="Delete is not available yet"
+                                                            aria-label="Delete @project.Name (not available yet)"><svg viewBox="0 0 24 24"
+                                                                                                               aria-hidden="true">
+                                                        <path d="M4 7h16M9 7V4h6v3m3 0-1 13H7L6 7m4 4v5m4-5v5" />
+                                                    </svg></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                }
+            </main>

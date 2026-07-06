@@ -1,0 +1,67 @@
+.projects-page { display:grid; gap:1.5rem; padding:clamp(1rem,3vw,2.5rem) 0; }
+.projects-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:1.5rem; }
+.eyebrow { display:block; margin-bottom:.35rem; color:#277268; font-size:.72rem; font-weight:800; letter-spacing:.11em; text-transform:uppercase; }
+.projects-heading h1 { margin:0; color:#142d29; font-size:clamp(1.8rem,4vw,2.5rem); font-weight:780; letter-spacing:-.035em; }
+.projects-heading p { max-width:38rem; margin:.45rem 0 0; color:#687b78; }
+.create-button,.retry-button { display:inline-flex; min-height:2.75rem; align-items:center; justify-content:center; gap:.5rem; padding:.68rem 1rem; color:#fff; border:1px solid #22635b; border-radius:9px; background:#22635b; box-shadow:0 7px 18px rgba(34,99,91,.18); font-weight:700; text-decoration:none; transition:background 120ms ease,transform 120ms ease; }
+.create-button:hover,.retry-button:hover { color:#fff; background:#194f48; transform:translateY(-1px); }
+.create-button svg { width:1.1rem; fill:none; stroke:currentColor; stroke-linecap:round; stroke-width:2; }
+.projects-panel,.state-panel { overflow:hidden; border:1px solid #dfe7e6; border-radius:16px; background:#fff; box-shadow:0 18px 50px rgba(15,39,37,.08); }
+.panel-heading { padding:1.15rem 1.35rem; border-bottom:1px solid #e5ecea; }
+.panel-heading h2 { margin:0; color:#1a332f; font-size:1rem; font-weight:750; }
+.panel-heading span { display:block; margin-top:.15rem; color:#7b8c89; font-size:.78rem; }
+.table-scroll { overflow-x:auto; }
+.projects-table { width:100%; min-width:700px; }
+.projects-table th { padding:.75rem 1.35rem; color:#70817e; background:#f7faf9; border-bottom:1px solid #e4ebe9; font-size:.71rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }
+.projects-table td { padding:1rem 1.35rem; color:#3c504d; border-bottom:1px solid #edf1f0; vertical-align:middle; }
+.projects-table tbody tr:last-child td { border-bottom:0; }
+.projects-table tbody tr { transition:background 120ms ease; }
+.projects-table tbody tr:hover { background:#fbfdfc; }
+.project-name { display:block; max-width:15rem; overflow:hidden; color:#193e38; font-weight:750; text-decoration:none; text-overflow:ellipsis; white-space:nowrap; }
+.project-name:hover { color:#277268; text-decoration:underline; text-underline-offset:3px; }
+.project-id { display:block; margin-top:.18rem; color:#96a3a1; font-size:.73rem; font-variant-numeric:tabular-nums; }
+.description { display:-webkit-box; max-width:28rem; overflow:hidden; color:#637572; font-size:.88rem; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
+.status-badge { display:inline-flex; align-items:center; gap:.42rem; padding:.32rem .62rem; border-radius:999px; font-size:.76rem; font-weight:750; }
+.status-badge span { width:.43rem; height:.43rem; border-radius:50%; background:currentColor; }
+.status-badge.active { color:#177257; background:#e8f7f1; }
+.status-badge.inactive { color:#6f7c7a; background:#eef1f1; }
+.actions-heading { text-align:right; }
+.row-actions { display:flex; justify-content:flex-end; gap:.4rem; }
+.icon-button { display:inline-grid; width:2.25rem; height:2.25rem; padding:0; place-items:center; color:#536965; border:1px solid #d9e2e0; border-radius:8px; background:#fff; transition:color 120ms ease,border-color 120ms ease,background 120ms ease; }
+.icon-button svg { width:1.08rem; fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:round; stroke-width:1.8; }
+.icon-button:hover { color:#1f6259; border-color:#9fc0bb; background:#eff8f6; }
+.icon-button.delete { color:#b23b38; }
+.icon-button:disabled { cursor:not-allowed; opacity:.48; }
+.icon-button:disabled:hover { color:#b23b38; border-color:#d9e2e0; background:#fff; }
+.icon-button:focus-visible,.create-button:focus-visible,.retry-button:focus-visible { outline:3px solid rgba(34,99,91,.22); outline-offset:2px; }
+.loading-panel { display:flex; min-height:10rem; align-items:center; justify-content:center; gap:1rem; color:#28433f; }
+.loading-panel strong,.loading-panel span { display:block; }
+.loading-panel span { margin-top:.15rem; color:#748582; font-size:.82rem; }
+.spinner { width:2rem; height:2rem; border:3px solid #d8e5e2; border-top-color:#277268; border-radius:50%; animation:spin .7s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.state-panel { display:grid; min-height:16rem; padding:2.5rem; place-items:center; text-align:center; }
+.state-panel h2 { margin:0 0 .4rem; color:#1b3530; font-size:1.15rem; }
+.state-panel p { margin:0 0 1.15rem; color:#71817f; }
+.state-icon,.empty-icon { display:grid; width:3.4rem; height:3.4rem; margin:0 auto 1rem; place-items:center; border-radius:14px; }
+.state-icon { color:#a92f2a; background:#fff0ef; font-size:1.35rem; font-weight:800; }
+.empty-icon { color:#277268; background:#edf7f5; }
+.empty-icon svg { width:1.8rem; fill:none; stroke:currentColor; stroke-linejoin:round; stroke-width:1.5; }
+.retry-button { cursor:pointer; }
+
+@media (max-width:720px) {
+    .projects-heading { align-items:stretch; flex-direction:column; }
+    .projects-heading>.create-button { align-self:flex-start; }
+    .projects-panel { overflow:visible; border:0; background:transparent; box-shadow:none; }
+    .panel-heading { margin-bottom:.75rem; padding:0; border:0; }
+    .table-scroll { overflow:visible; }
+    .projects-table,.projects-table tbody,.projects-table tr,.projects-table td { display:block; width:100%; min-width:0; }
+    .projects-table thead { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }
+    .projects-table tr { margin-bottom:.8rem; padding:1rem; border:1px solid #dfe7e6; border-radius:13px; background:#fff; box-shadow:0 10px 30px rgba(15,39,37,.07); }
+    .projects-table td { padding:.4rem 0; border:0; }
+    .projects-table td[data-label="Project"] { padding-bottom:.7rem; border-bottom:1px solid #edf1f0; }
+    .project-name { max-width:100%; }
+    .description { max-width:none; margin:.2rem 0; }
+    .row-actions { justify-content:flex-start; padding-top:.45rem; }
+}
+
+@media (prefers-reduced-motion:reduce) { .spinner { animation-duration:1.5s; } }

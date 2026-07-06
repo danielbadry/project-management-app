@@ -49,5 +49,4 @@ public partial class Login
 
         LoginErrorMessage = result.ErrorMessage;
     }
-
 }

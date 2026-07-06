@@ -25,4 +25,22 @@ public class ProjectsService(ApiClient apiClient)
 
         return ServiceResult<ProjectFormResponseDto>.Success(result.Data);
     }
+
+    public async Task<ServiceResult<List<ProjectFormResponseDto>>> GetProjectListAsync()
+    {
+        var result = await _apiClient.GetAsync<List<ProjectFormResponseDto>>(
+            projectsUrl,
+            "projects",
+            "Loading projects failed. Please try again.");
+
+
+        if (!result.Succeeded || result.Data is null)
+        {
+            return ServiceResult<List<ProjectFormResponseDto>>.Failure(
+                result.ErrorMessage ?? "Loading projects failed. Please try again.");
+        }
+
+        return ServiceResult<List<ProjectFormResponseDto>>.Success(result.Data);
+
+    }
 }

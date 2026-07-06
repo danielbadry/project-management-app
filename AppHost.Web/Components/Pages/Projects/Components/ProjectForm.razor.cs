@@ -1,8 +1,8 @@
 using Shared.Dtos.ProjectForm;
 using AppHost.Web.Services;
 using Microsoft.AspNetCore.Components;
-using System.Text;
-namespace AppHost.Web.Components.Pages.Projects;
+
+namespace AppHost.Web.Components.Pages.Projects.Components;
 
 public partial class ProjectForm()
 {
@@ -30,5 +30,4 @@ public partial class ProjectForm()
             _projectFormErrorMessage = result.ErrorMessage ?? "";
         }
     }
-
 }
