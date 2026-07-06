@@ -33,7 +33,13 @@ public class ProjectsService : IProjectsService
         await _dbContext.SaveChangesAsync();
 
 
-        return ApiResponse<ProjectFormResponseDto>.Success(new ProjectFormResponseDto { Id = project.Id, Name = project.Name, Description = project.Description });
+        return ApiResponse<ProjectFormResponseDto>.Success(new ProjectFormResponseDto
+        {
+            Id = project.Id,
+            Name = project.Name,
+            Description = project.Description,
+            IsActive = project.IsActive
+        });
 
     }
     public async Task<ApiResponse<List<ProjectFormResponseDto>>> GetProjectListAsync()
@@ -78,6 +84,45 @@ public class ProjectsService : IProjectsService
             : ApiResponse<ProjectFormResponseDto>.Success(
                 project,
                 "Project loaded successfully");
+    }
+
+    public async Task<ApiResponse<ProjectFormResponseDto>> UpdateProjectAsync(
+        int id,
+        ProjectFormRequestDto request)
+    {
+        if (id <= 0)
+        {
+            return ApiResponse<ProjectFormResponseDto>.Fail("The project ID is invalid.");
+        }
+
+        if (request is null || string.IsNullOrWhiteSpace(request.Name))
+        {
+            return ApiResponse<ProjectFormResponseDto>.Fail(
+                "A project name is required.");
+        }
+
+        var project = await _dbContext.Projects.FindAsync(id);
+        if (project is null)
+        {
+            return ApiResponse<ProjectFormResponseDto>.Fail("Project not found.");
+        }
+
+        project.Name = request.Name.Trim();
+        project.Description = request.Description?.Trim() ?? string.Empty;
+        project.IsActive = request.IsActive;
+        project.UpdatedAtUtc = DateTimeOffset.UtcNow;
+
+        await _dbContext.SaveChangesAsync();
+
+        return ApiResponse<ProjectFormResponseDto>.Success(
+            new ProjectFormResponseDto
+            {
+                Id = project.Id,
+                Name = project.Name,
+                Description = project.Description,
+                IsActive = project.IsActive
+            },
+            "Project updated successfully");
     }
 
 }

@@ -55,4 +55,24 @@ public class ProjectsController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> UpdateProject(
+        int id,
+        [FromBody] ProjectFormRequestDto request)
+    {
+        if (id <= 0 || string.IsNullOrWhiteSpace(request.Name))
+        {
+            return BadRequest("The project ID and name are required.");
+        }
+
+        var result = await _projectService.UpdateProjectAsync(id, request);
+
+        if (!result.IsSuccess)
+        {
+            return NotFound(result);
+        }
+
+        return Ok(result);
+    }
 }

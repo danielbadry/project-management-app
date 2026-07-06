@@ -4,7 +4,7 @@
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
-<PageTitle>Create project</PageTitle>
+<PageTitle>@(IsEditMode ? "Edit project" : "Create project")</PageTitle>
 
 <section class="project-page" aria-labelledby="project-form-title">
     <div class="project-shell">
@@ -14,8 +14,8 @@
             </div>
             <div>
                 <span class="eyebrow">Project workspace</span>
-                <h1 id="project-form-title">Create a new project</h1>
-                <p>Add the essentials now. You can refine project details later.</p>
+                <h1 id="project-form-title">@(IsEditMode ? "Edit project" : "Create a new project")</h1>
+                <p>@(IsEditMode ? "Update the project details below." : "Add the essentials now. You can refine project details later.")</p>
             </div>
         </header>
 
@@ -64,10 +64,10 @@
                 }
 
                 <div class="form-actions">
-                    <a class="cancel-button" href="dashboard">Cancel</a>
+                    <a class="cancel-button" href="/projects/index">Cancel</a>
                     <button class="save-button" type="submit">
-                        <span aria-hidden="true">+</span>
-                        Create project
+                        <span aria-hidden="true">@(IsEditMode ? "✓" : "+")</span>
+                        @(IsEditMode ? "Save changes" : "Create project")
                     </button>
                 </div>
             </EditForm>

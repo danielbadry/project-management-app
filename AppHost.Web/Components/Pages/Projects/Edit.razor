@@ -1,7 +1,22 @@
 @page "/projects/{Id:int}/edit"
+@using AppHost.Web.Components.Pages.Projects.Components
 
 @attribute [RequireAuthentication]
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
-<PageTitle>Create project</PageTitle>
+<PageTitle>Edit project</PageTitle>
+
+@if (_isLoading)
+{
+    <p role="status">Loading project...</p>
+}
+else if (!string.IsNullOrWhiteSpace(_errorMessage))
+{
+    <div class="alert alert-danger" role="alert">@_errorMessage</div>
+    <a class="btn btn-outline-secondary" href="/projects/index">Back to projects</a>
+}
+else if (_projectInfo is not null)
+{
+    <ProjectForm IsEditMode="true" ProjectInfo="@_projectInfo" />
+}
