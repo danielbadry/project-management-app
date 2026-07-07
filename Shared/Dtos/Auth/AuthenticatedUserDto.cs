@@ -1,0 +1,14 @@
+namespace Shared.Dtos.Auth;
+
+public sealed class AuthenticatedUserDto
+{
+    public int UserId { get; set; }
+
+    public string Name { get; set; } = string.Empty;
+
+    public string Username { get; set; } = string.Empty;
+
+    public string Email { get; set; } = string.Empty;
+
+    public string Role { get; set; } = string.Empty;
+}

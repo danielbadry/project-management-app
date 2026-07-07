@@ -33,7 +33,7 @@ public class RegisterService(ApiClient apiClient,
 
         await _tokenService.SetTokenAsync(result.Data.Token);
 
-        _authProvider.NotifyUserAuthenticated(result.Data.Token);
+        await _authProvider.NotifyUserAuthenticatedAsync(result.Data.Token);
 
         return ServiceResult.Success();
     }
