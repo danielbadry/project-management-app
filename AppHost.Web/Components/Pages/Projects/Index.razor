@@ -1,4 +1,5 @@
 @page "/projects/index"
+@page "/projects"
 
 @attribute [RequireAuthentication]
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
@@ -63,7 +64,7 @@
             <header class="panel-heading">
                 <div>
                     <h2>All projects</h2><span>@_projectList.Count @(_projectList.Count == 1 ? "project" :
-                                                                                                                      "projects")</span>
+                                                                                                                                                              "projects")</span>
                 </div>
             </header>
             <div class="table-scroll">
@@ -84,7 +85,7 @@
                                                                 href="@($"/projects/{project.Id}")">@project.Name</a><span
                                     class="project-id">#@project.Id</span></td>
                                     <td data-label="Description"><span
-                                        class="description">@(string.IsNullOrWhiteSpace(project.Description) ? "No description"                         : project.Description)</span></td>
+                                        class="description">@(string.IsNullOrWhiteSpace(project.Description) ? "No description"                                : project.Description)</span></td>
                                         <td data-label="Status"><span
                                             class="status-badge @(project.IsActive ? "active" : "inactive")"><span
                                             aria-hidden="true"></span>@(project.IsActive ? "Active" : "Inactive")</span></td>
@@ -103,10 +104,8 @@
                                                     </svg></a>
                                                     <button class="icon-button delete" type="button"
                                                             disabled="@(_deletingProjectId is not null)"
-                                                            @onclick="() => DeleteProjectAsync(project)"
-                                                            title="Delete @project.Name"
-                                                            aria-label="Delete @project.Name"><svg viewBox="0 0 24 24"
-                                                                                                               aria-hidden="true">
+                                                            @onclick="() => DeleteProjectAsync(project)" title="Delete @project.Name"
+                                                            aria-label="Delete @project.Name"><svg viewBox="0 0 24 24" aria-hidden="true">
                                                         <path d="M4 7h16M9 7V4h6v3m3 0-1 13H7L6 7m4 4v5m4-5v5" />
                                                     </svg></button>
                                                 </div>
