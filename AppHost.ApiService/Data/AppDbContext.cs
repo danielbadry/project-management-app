@@ -14,4 +14,19 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<Projects> Projects => Set<Projects>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<User>()
+            .HasIndex(user => user.Email)
+            .IsUnique()
+            .HasDatabaseName("UX_Users_Email");
+
+        modelBuilder.Entity<User>()
+            .HasIndex(user => user.Username)
+            .IsUnique()
+            .HasDatabaseName("UX_Users_Username");
+    }
 }

@@ -29,7 +29,7 @@ public class AuthenticationService : IAuthenticationService
 
         var user = await _dbContext.Users
             .FirstOrDefaultAsync(x =>
-                x.Username == request.Username &&
+                x.Username == request.Username.Trim() &&
                 x.IsActive);
 
         if (user is not null &&
