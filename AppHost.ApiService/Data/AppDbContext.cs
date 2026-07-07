@@ -14,6 +14,7 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<Projects> Projects => Set<Projects>();
+    public DbSet<Story> Stories => Set<Story>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,5 +29,23 @@ public class AppDbContext : DbContext
             .HasIndex(user => user.Username)
             .IsUnique()
             .HasDatabaseName("UX_Users_Username");
+
+        modelBuilder.Entity<Story>()
+            .HasOne(story => story.Owner)
+            .WithMany(user => user.OwnedStories)
+            .HasForeignKey(story => story.OwnerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Story>()
+            .HasOne(story => story.AssignedUser)
+            .WithMany(user => user.AssignedStories)
+            .HasForeignKey(story => story.AssignedId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Story>()
+            .HasOne(story => story.Project)
+            .WithMany(project => project.ProjectStories)
+            .HasForeignKey(story => story.ProjectId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

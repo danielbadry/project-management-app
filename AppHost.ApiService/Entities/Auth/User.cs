@@ -1,5 +1,6 @@
 namespace AppHost.ApiService.Entities.Auth;
 
+using AppHost.ApiService.Entities.ProjectManagement;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -39,4 +40,8 @@ public class User
     public DateTimeOffset CreatedAtUtc { get; set; } = DateTimeOffset.UtcNow;
 
     public DateTimeOffset? UpdatedAtUtc { get; set; }
+
+    public ICollection<Story> OwnedStories { get; set; } = [];
+
+    public ICollection<Story> AssignedStories { get; set; } = [];
 }

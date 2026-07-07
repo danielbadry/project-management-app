@@ -1,13 +1,14 @@
 namespace AppHost.ApiService.Entities.ProjectManagement;
 
+using AppHost.ApiService.Entities.Auth;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 [Table(TableName, Schema = SchemaName)]
-public class Projects
+public class Story
 {
     public const string SchemaName = "ProjectManagement";
-    public const string TableName = "Projects";
+    public const string TableName = "Stories";
 
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -15,14 +16,24 @@ public class Projects
 
     [Required]
     [MaxLength(32)]
-    public string Name { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
 
     [MaxLength(256)]
     public string Description { get; set; } = string.Empty;
 
-    public bool IsActive { get; set; } = true;
+    public int OwnerId { get; set; }
 
-    public ICollection<Story> ProjectStories { get; set; } = [];
+    public User Owner { get; set; } = null!;
+
+    public int ProjectId { get; set; }
+
+    public Projects Project { get; set; } = null!;
+
+    public int? AssignedId { get; set; }
+
+    public User? AssignedUser { get; set; }
+
+    public bool IsActive { get; set; } = true;
 
     public DateTimeOffset CreatedAtUtc { get; set; } = DateTimeOffset.UtcNow;
 
