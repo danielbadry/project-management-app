@@ -32,6 +32,10 @@ public class User
 
     public bool IsActive { get; set; } = true;
 
+    public int FailedLoginAttempts { get; set; }
+
+    public DateTimeOffset? LockoutEndUtc { get; set; }
+
     public DateTimeOffset CreatedAtUtc { get; set; } = DateTimeOffset.UtcNow;
 
     public DateTimeOffset? UpdatedAtUtc { get; set; }

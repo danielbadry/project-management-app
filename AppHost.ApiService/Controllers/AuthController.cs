@@ -3,6 +3,7 @@ namespace AppHost.ApiService.Controllers;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Mvc;
 using AppHost.ApiService.Dtos;
 using AppHost.ApiService.Services.Auth;
@@ -16,6 +17,7 @@ public class AuthController(IAuthenticationService authenticationService) : Cont
     private readonly IAuthenticationService _authenticationService = authenticationService;
 
     [HttpPost]
+    [EnableRateLimiting("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
     {
         var result = await _authenticationService.LoginAsync(request);

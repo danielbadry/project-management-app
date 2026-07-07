@@ -8,6 +8,9 @@ namespace AppHost.ApiService.Services.Auth;
 
 public class AuthenticationService : IAuthenticationService
 {
+    private const int MaximumFailedLoginAttempts = 5;
+    private static readonly TimeSpan LockoutDuration = TimeSpan.FromMinutes(15);
+
     private readonly AppDbContext _dbContext;
     private readonly IJwtTokenService _jwtTokenService;
 
@@ -32,18 +35,55 @@ public class AuthenticationService : IAuthenticationService
                 x.Username == request.Username.Trim() &&
                 x.IsActive);
 
-        if (user is not null &&
-            BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+        if (user is null)
         {
-            return ApiResponse<LoginResponseDto>.Success(new LoginResponseDto
-            {
-                Token = _jwtTokenService.CreateToken(user)
-            });
+            return InvalidCredentials();
         }
 
-        return ApiResponse<LoginResponseDto>.Fail(
-            "Username or Password is not correct ");
+        var now = DateTimeOffset.UtcNow;
+
+        if (user.LockoutEndUtc > now)
+        {
+            return InvalidCredentials();
+        }
+
+        if (user.LockoutEndUtc is not null)
+        {
+            user.LockoutEndUtc = null;
+            user.FailedLoginAttempts = 0;
+        }
+
+        if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+        {
+            user.FailedLoginAttempts++;
+            user.UpdatedAtUtc = now;
+
+            if (user.FailedLoginAttempts >= MaximumFailedLoginAttempts)
+            {
+                user.LockoutEndUtc = now.Add(LockoutDuration);
+            }
+
+            await _dbContext.SaveChangesAsync();
+            return InvalidCredentials();
+        }
+
+        if (user.FailedLoginAttempts != 0 || user.LockoutEndUtc is not null)
+        {
+            user.FailedLoginAttempts = 0;
+            user.LockoutEndUtc = null;
+            user.UpdatedAtUtc = now;
+            await _dbContext.SaveChangesAsync();
+        }
+
+        return ApiResponse<LoginResponseDto>.Success(new LoginResponseDto
+        {
+            Token = _jwtTokenService.CreateToken(user)
+        });
 
     }
+
+    private static ApiResponse<LoginResponseDto> InvalidCredentials() =>
+        ApiResponse<LoginResponseDto>.Fail(
+            "Username or password is incorrect, or the account is temporarily unavailable.");
 
 }

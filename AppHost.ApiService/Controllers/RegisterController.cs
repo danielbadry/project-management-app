@@ -1,6 +1,7 @@
 namespace AppHost.ApiService.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Shared.Dtos.Register;
 using AppHost.ApiService.Services.Auth;
 
@@ -17,6 +18,7 @@ public class RegisterController : ControllerBase
     }
 
     [HttpPost]
+    [EnableRateLimiting("register")]
     public async Task<IActionResult> RegisterUser(
         [FromBody] RegisterFormDataDto request)
     {
