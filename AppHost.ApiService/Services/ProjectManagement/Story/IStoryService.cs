@@ -6,6 +6,6 @@ namespace AppHost.ApiService.Services.ProjectManagement;
 
 public interface IStoryService
 {
-    Task<ApiResponse<StoryFromRequestDto>> CreateStoryAsync(
+    Task<ApiResponse<StoryRecordDto>> CreateStoryAsync(
         StoryFromRequestDto request);
 }

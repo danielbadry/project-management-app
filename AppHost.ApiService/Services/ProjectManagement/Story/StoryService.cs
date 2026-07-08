@@ -15,9 +15,14 @@ public class StoryService : IStoryService
         _dbContext = dbContext;
     }
 
-    public async Task<> CreateStoryAsync(StoryFromRequestDto request)
+    public async Task<ApiResponse<StoryRecordDto>> CreateStoryAsync(StoryFromRequestDto request)
     {
-
+        return ApiResponse<StoryRecordDto>.Success(new StoryRecordDto
+        {
+            Id = 1,
+            Title = "project.Name",
+            Description = "project.Description",
+            IsActive = true
+        });
     }
-
 }
