@@ -58,18 +58,37 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 var jwtOptions = builder.Configuration
     .GetSection(JwtOptions.SectionName)
-    .Get<JwtOptions>()
-    ?? throw new InvalidOperationException("JWT configuration was not found.");
+    .Get<JwtOptions>() ?? new JwtOptions();
 
-if (string.IsNullOrWhiteSpace(jwtOptions.Key) ||
-    Encoding.UTF8.GetByteCount(jwtOptions.Key) < 32)
+var jwtKey = jwtOptions.Key;
+
+if (string.IsNullOrWhiteSpace(jwtKey))
+{
+    if (builder.Environment.IsDevelopment())
+    {
+        jwtKey = "development-signing-key-1234567890";
+    }
+    else
+    {
+        throw new InvalidOperationException(
+            "JWT signing key must be configured and contain at least 32 bytes.");
+    }
+}
+
+if (Encoding.UTF8.GetByteCount(jwtKey) < 32)
 {
     throw new InvalidOperationException(
         "JWT signing key must be configured and contain at least 32 bytes.");
 }
 
-builder.Services.Configure<JwtOptions>(
-    builder.Configuration.GetSection(JwtOptions.SectionName));
+jwtOptions.Key = jwtKey;
+builder.Services.Configure<JwtOptions>(options =>
+{
+    options.Issuer = jwtOptions.Issuer;
+    options.Audience = jwtOptions.Audience;
+    options.ExpiresMinutes = jwtOptions.ExpiresMinutes;
+    options.Key = jwtKey;
+});
 builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();
 
 builder.Services
