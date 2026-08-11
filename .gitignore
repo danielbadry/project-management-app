@@ -59,6 +59,7 @@ wwwroot/service-worker-assets.js
 # Environment files
 .env
 .env.*
+!.env.example
 
 # Secrets
 secrets.json

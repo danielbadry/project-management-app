@@ -20,12 +20,12 @@ public class RegisterFormDataDto
     public string Username { get; set; } = string.Empty;
 
     [Required]
-    [MinLength(12)]
+    [MinLength(6)]
     [MaxLength(128)]
     public string Password { get; set; } = string.Empty;
 
     [Required]
-    [MinLength(12)]
+    [MinLength(6)]
     [MaxLength(128)]
     public string ConfirmPassword { get; set; } = string.Empty;
 

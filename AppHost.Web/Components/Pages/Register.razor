@@ -17,32 +17,30 @@
             <DataAnnotationsValidator />
             <div class="field">
                 <label for="name">Name</label>
-                <InputText id="name" class="field-input" autocomplete="name" @bind-Value="RegisterDto.Name" />
+                <input id="name" class="field-input" autocomplete="name" @bind="RegisterDto.Name" />
                 <ValidationMessage For="@(() => RegisterDto.Name)" />
             </div>
             <div class="field">
                 <label for="email">Email</label>
-                <InputText id="email" type="email" class="field-input" autocomplete="email"
-                           @bind-Value="RegisterDto.Email" />
+                <input id="email" type="email" class="field-input" autocomplete="email" @bind="RegisterDto.Email" />
                 <ValidationMessage For="@(() => RegisterDto.Email)" />
             </div>
             <div class="field">
                 <label for="username">Username</label>
-                <InputText id="username" class="field-input" autocomplete="username"
-                           @bind-Value="RegisterDto.Username" />
+                <input id="username" class="field-input" autocomplete="username" @bind="RegisterDto.Username" />
                 <ValidationMessage For="@(() => RegisterDto.Username)" />
             </div>
 
             <div class="field">
                 <label for="password">Password</label>
-                <InputText id="password" type="password" class="field-input" autocomplete="new-password"
-                           @bind-Value="RegisterDto.Password" />
+                <input id="password" name="password" type="password" class="field-input" autocomplete="new-password"
+                       @bind="RegisterDto.Password" @bind:event="oninput" />
                 <ValidationMessage For="@(() => RegisterDto.Password)" />
             </div>
             <div class="field">
                 <label for="confirm-password">Confirm password</label>
-                <InputText id="confirm-password" type="password" class="field-input" autocomplete="new-password"
-                           @bind-Value="RegisterDto.ConfirmPassword" />
+                <input id="confirm-password" name="confirmPassword" type="password" class="field-input"
+                       autocomplete="new-password" @bind="RegisterDto.ConfirmPassword" @bind:event="oninput" />
                 <ValidationMessage For="@(() => RegisterDto.ConfirmPassword)" />
             </div>
 

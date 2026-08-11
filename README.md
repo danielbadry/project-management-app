@@ -53,6 +53,31 @@ The recommended way is to run the Aspire app host:
 dotnet run --project AppHost.AppHost/AppHost.AppHost.csproj
 ```
 
+## Local configuration
+
+Create your local environment file before starting the application:
+
+```bash
+cp .env.example .env
+```
+
+Open `.env` and replace the sample database connection values with your local
+SQL Server credentials. The API loads this file only in the Development
+environment. Environment variable names use double underscores for nested .NET
+configuration keys; for example, `ConnectionStrings__DefaultConnection` maps to
+`ConnectionStrings:DefaultConnection`.
+
+The `.env` file is ignored by Git. Keep `.env.example` free of real passwords
+and update it whenever a new required configuration value is introduced.
+
+Alternatively, developers can use .NET User Secrets:
+
+```bash
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" \
+  "Server=localhost,1433;Database=ProjectManagementApp;User Id=project_app;Password=replace-me;TrustServerCertificate=True;" \
+  --project AppHost.ApiService
+```
+
 The Aspire dashboard will show the running `webfrontend` and `apiservice` projects, including their available URLs.
 
 You can also run projects individually:

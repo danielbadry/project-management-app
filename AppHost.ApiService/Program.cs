@@ -7,8 +7,48 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Threading.RateLimiting;
+using AppHost.ApiService.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
+
+if (builder.Environment.IsDevelopment())
+{
+    var envFilePath = Path.GetFullPath(
+        Path.Combine(builder.Environment.ContentRootPath, "..", ".env"));
+
+    if (File.Exists(envFilePath))
+    {
+        var envValues = new Dictionary<string, string?>(
+            StringComparer.OrdinalIgnoreCase);
+
+        foreach (var rawLine in File.ReadLines(envFilePath))
+        {
+            var line = rawLine.Trim();
+
+            if (line.Length == 0 || line.StartsWith('#'))
+            {
+                continue;
+            }
+
+            var parts = line.Split('=', 2);
+
+            if (parts.Length != 2 || parts[0].Length == 0)
+            {
+                continue;
+            }
+
+            var environmentKey = parts[0].Trim();
+
+            if (Environment.GetEnvironmentVariable(environmentKey) is null)
+            {
+                envValues[environmentKey.Replace("__", ":")] =
+                    parts[1].Trim().Trim('"', '\'');
+            }
+        }
+
+        builder.Configuration.AddInMemoryCollection(envValues);
+    }
+}
 
 // Add service defaults & Aspire client integrations.
 builder.AddServiceDefaults();
@@ -117,6 +157,8 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
+
+app.UseMiddleware<RequestBodyLoggingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
