@@ -34,6 +34,8 @@ else if (_projectInfo is not null)
 
             <div class="d-flex gap-2 mt-4">
                 <a class="btn btn-outline-secondary" href="/projects/index">Back</a>
+                <a class="btn btn-outline-primary" href="@($"/projects/{_projectInfo.Id}/stories")">View stories</a>
+                <a class="btn btn-outline-primary" href="@($"/stories/create?projectId={_projectInfo.Id}")">New story</a>
                 <a class="btn btn-primary" href="@($"/projects/{_projectInfo.Id}/edit")">Edit project</a>
             </div>
         </div>

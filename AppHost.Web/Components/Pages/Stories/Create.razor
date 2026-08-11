@@ -1,0 +1,11 @@
+@page "/stories/create"
+@using AppHost.Web.Components.Pages.Stories.Components
+@attribute [RequireAuthentication]
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<StoryForm InitialProjectId="@ProjectId" />
+
+@code {
+    [SupplyParameterFromQuery(Name = "projectId")]
+    public int? ProjectId { get; set; }
+}

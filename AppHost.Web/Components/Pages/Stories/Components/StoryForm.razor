@@ -1,0 +1,94 @@
+@attribute [RequireAuthentication]
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<PageTitle>@(IsEditMode ? "Edit story" : "Create story")</PageTitle>
+
+<section class="story-page" aria-labelledby="story-form-title">
+    <div class="story-shell">
+        <header class="story-heading">
+            <div class="heading-icon" aria-hidden="true">+</div>
+            <div>
+                <span class="eyebrow">Story workspace</span>
+                <h1 id="story-form-title">@(IsEditMode ? "Edit story" : "Create a new story")</h1>
+                <p>@(IsEditMode ? "Update the story details below." : "Describe a focused piece of work for this project.")</p>
+            </div>
+        </header>
+
+        <EditForm Model="@_request" FormName="StoryForm" OnValidSubmit="HandleSaveAsync" class="story-form">
+            <DataAnnotationsValidator />
+
+            @if (_isLoadingOptions)
+            {
+                <p role="status">Loading projects and users...</p>
+            }
+
+            <div class="field">
+                <label for="project">Project</label>
+                <InputSelect id="project" class="field-input" @bind-Value="_request.ProjectId"
+                             disabled="@_isLoadingOptions">
+                    <option value="0">Select a project</option>
+                    @foreach (var project in _projects)
+                    {
+                        <option value="@project.Id">@project.Name</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => _request.ProjectId)" />
+            </div>
+
+            <div class="field">
+                <label for="assigned-user">Assign to <span class="optional">Optional</span></label>
+                <InputSelect id="assigned-user" class="field-input" @bind-Value="_request.AssignedId"
+                             disabled="@_isLoadingOptions">
+                    <option value="">Unassigned</option>
+                    @foreach (var user in _users)
+                    {
+                        <option value="@user.Id">@user.Name (@user.Username)</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => _request.AssignedId)" />
+            </div>
+
+            <div class="field">
+                <div class="field-heading">
+                    <label for="title">Story title</label>
+                    <span>@_request.Title.Length/32</span>
+                </div>
+                <input id="title" name="title" class="field-input" maxlength="32" autocomplete="off"
+                       placeholder="e.g. Add project search" @bind="_request.Title" @bind:event="oninput" />
+                <span class="field-help">Use a short title that describes the expected outcome.</span>
+                <ValidationMessage For="@(() => _request.Title)" />
+            </div>
+
+            <div class="field">
+                <div class="field-heading">
+                    <label for="description">Description <span class="optional">Optional</span></label>
+                    <span>@_request.Description.Length/256</span>
+                </div>
+                <textarea id="description" name="description" class="field-input description-input"
+                          maxlength="256" rows="5" placeholder="What needs to be delivered?"
+                          @bind="_request.Description" @bind:event="oninput"></textarea>
+                <ValidationMessage For="@(() => _request.Description)" />
+            </div>
+
+            <label class="status-option" for="is-active">
+                <input id="is-active" type="checkbox" @bind="_request.IsActive" />
+                <span>
+                    <strong>Active story</strong>
+                    <small>Make this story available for work immediately.</small>
+                </span>
+            </label>
+
+            @if (!string.IsNullOrWhiteSpace(_errorMessage))
+            {
+                <div class="form-error" role="alert">@_errorMessage</div>
+            }
+
+            <div class="form-actions">
+                <a class="cancel-button" href="@CancelUrl">Cancel</a>
+                <button class="save-button" type="submit" disabled="@(_isSaving || _isLoadingOptions)">
+                    @(_isSaving ? "Saving..." : IsEditMode ? "Save changes" : "Create story")
+                </button>
+            </div>
+        </EditForm>
+    </div>
+</section>

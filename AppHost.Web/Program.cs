@@ -22,6 +22,8 @@ builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<ApiClient>();
 builder.Services.AddScoped<RegisterService>();
 builder.Services.AddScoped<ProjectsService>();
+builder.Services.AddScoped<StoriesService>();
+builder.Services.AddScoped<UsersService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddOutputCache();
 

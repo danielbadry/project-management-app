@@ -1,0 +1,19 @@
+@page "/projects/{ProjectId:int}/stories/{Id:int}/edit"
+@using AppHost.Web.Components.Pages.Stories.Components
+@attribute [RequireAuthentication]
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<PageTitle>Edit story</PageTitle>
+
+@if (_isLoading)
+{
+    <p role="status">Loading story...</p>
+}
+else if (!string.IsNullOrWhiteSpace(_errorMessage))
+{
+    <div class="alert alert-danger" role="alert">@_errorMessage</div>
+}
+else if (_story is not null)
+{
+    <StoryForm IsEditMode="true" StoryInfo="@_story" />
+}
