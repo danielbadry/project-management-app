@@ -15,6 +15,7 @@ public class AppDbContext : DbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<Projects> Projects => Set<Projects>();
     public DbSet<Story> Stories => Set<Story>();
+    public DbSet<SubTask> SubTasks => Set<SubTask>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
