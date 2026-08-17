@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.RateLimiting;
 using AppHost.ApiService.Middleware;
 using AppHost.ApiService.Services.ProjectManagement.Story;
+using AppHost.ApiService.Services.ProjectManagement.SubTask;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -154,6 +155,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<IProjectsService, ProjectsService>();
 builder.Services.AddScoped<IStoryService, StoryService>();
+builder.Services.AddScoped<ISubTaskService, SubTaskService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 var app = builder.Build();
 

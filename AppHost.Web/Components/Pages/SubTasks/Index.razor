@@ -1,0 +1,70 @@
+@page "/projects/{ProjectId:int}/stories/{StoryId:int}/subtasks"
+@attribute [RequireAuthentication]
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<PageTitle>Stories</PageTitle>
+
+<main class="container py-4">
+    <header class="d-flex justify-content-between align-items-start gap-3 mb-4">
+        <div>
+            <a class="small text-secondary" href="@($"/projects/{ProjectId}")">← Back to project</a>
+            <h1 class="mt-2 mb-1">Subtasks</h1>
+            <p class="text-secondary mb-0">Plan and track the work in project #@ProjectId.</p>
+        </div>
+        <a class="btn btn-primary" href="@($"/stories/create?projectId={ProjectId}")">+ New Subtask</a>
+    </header>
+
+    @if (_isLoading)
+    {
+        <p role="status">Loading subtasks...</p>
+    }
+    else if (!string.IsNullOrWhiteSpace(_errorMessage))
+    {
+        <div class="alert alert-danger" role="alert">@_errorMessage</div>
+        <button class="btn btn-outline-secondary" @onclick="LoadSubTasksAsync">Try again</button>
+    }
+    else if (_subTasks.Count == 0)
+    {
+        <section class="empty-state text-center border rounded-3 p-5">
+            <h2 class="h4">No stories yet</h2>
+            <p class="text-secondary">Create the first subtask for this story.</p>
+            <a class="btn btn-primary" href="@($"/stories/create?projectId={ProjectId}")">Create a story</a>
+        </section>
+    }
+    else
+    {
+        <div class="table-responsive border rounded-3 bg-white">
+            <table class="table align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Story</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var story in _subTasks)
+                    {
+                        <tr>
+                            <td>
+                                <a href="@($"/projects/{ProjectId}/stories/{story.Id}")">@story.Title</a>
+                                <div class="small text-secondary">#@story.Id</div>
+                            </td>
+                            <td>@(string.IsNullOrWhiteSpace(story.Description) ? "No description" : story.Description)</td>
+                            <td>
+                                <span class="badge @(story.IsActive ? "text-bg-success" : "text-bg-secondary")">
+                                    @(story.IsActive ? "Active" : "Inactive")
+                                </span>
+                            </td>
+                            <td class="text-end text-nowrap">
+                                <a class="btn btn-sm btn-outline-secondary"
+                                   href="@($"/projects/{ProjectId}/stories/{story.Id}/edit")">Edit</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</main>
