@@ -39,4 +39,38 @@ public class SubTaskService : ISubTaskService
         return ApiResponse<List<SubTaskRecordDto>>.Success(subTasks, "subTasks loaded successfully");
     }
 
+    public async Task<ApiResponse<SubTaskRecordDto>> CreateSubTasksAsync(SubTaskFormDto request)
+    {
+        if (request is null || request.StoryId <= 0 || string.IsNullOrWhiteSpace(request.Title) || string.IsNullOrWhiteSpace(request.Description))
+        {
+            return ApiResponse<SubTaskRecordDto>.Fail("A story and subtask title are required.");
+        }
+
+        if (!await _dbContext.Stories.AnyAsync(story => story.Id == request.StoryId))
+        {
+            return ApiResponse<SubTaskRecordDto>.Fail("Story not found.");
+        }
+
+        var subTask = new Entities.ProjectManagement.SubTask
+        {
+            Title = request.Title.Trim(),
+            Description = request.Description?.Trim() ?? string.Empty,
+            StoryId = request.StoryId,
+            IsActive = true
+        };
+
+        _dbContext.SubTasks.Add(subTask);
+        await _dbContext.SaveChangesAsync();
+
+        return ApiResponse<SubTaskRecordDto>.Success(Map(subTask), "Subtask created successfully");
+    }
+
+    private static SubTaskRecordDto Map(Entities.ProjectManagement.SubTask subTask) => new()
+    {
+        Id = subTask.Id,
+        Title = subTask.Title,
+        Description = subTask.Description,
+        StoryId = subTask.StoryId,
+        IsActive = subTask.IsActive
+    };
 }

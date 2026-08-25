@@ -1,0 +1,14 @@
+@page "/projects/{ProjectId:int}/stories/{StoryId:int}/subtasks/create"
+@using AppHost.Web.Components.Pages.SubTasks.Components;
+@attribute [RequireAuthentication]
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<SubtaskForm ProjectId="@ProjectId" StoryId="@StoryId" />
+
+@code {
+    [Parameter]
+    public int ProjectId { get; set; }
+
+    [Parameter]
+    public int StoryId { get; set; }
+}

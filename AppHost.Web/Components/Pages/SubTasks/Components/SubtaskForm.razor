@@ -1,0 +1,78 @@
+@attribute [RequireAuthentication]
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<PageTitle>@(IsEditMode ? "Edit subtask" : "Create subtask")</PageTitle>
+
+<section class="subtask-page" aria-labelledby="subtask-form-title">
+    <div class="subtask-shell">
+        <header class="subtask-heading">
+            <div class="heading-icon" aria-hidden="true">+</div>
+            <div>
+                <span class="eyebrow">Subtask workspace</span>
+                <h1 id="subtask-form-title">@(IsEditMode ? "Edit subtask" : "Create a new subtask")</h1>
+                <p>@(IsEditMode ? "Update the subtask details below." : "Describe a focused piece of work for this story.")</p>
+            </div>
+        </header>
+        <EditForm Model="@_request" FormName="SubtaskForm" OnValidSubmit="HandleSaveAsync" class="subtask-form">
+            <DataAnnotationsValidator />
+
+            <div class="field">
+                <label for="story">Story</label>
+                <InputSelect id="story" class="field-input" @bind-Value="_request.StoryId"
+                             disabled="@_isLoadingOptions">
+                    <option value="0">Select a story</option>
+                    @foreach (var story in _stories)
+                    {
+                        <option value="@story.Id">@story.Title</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => _request.StoryId)" />
+            </div>
+            <div class="field">
+                <div class="field-heading">
+                    <label for="title">Subtask title</label>
+                    <span>@_request.Title.Length/32</span>
+                </div>
+                <input id="title" name="title" class="field-input" maxlength="32" autocomplete="off"
+                       placeholder="e.g. Add empty state" aria-describedby="title-help" @bind="_request.Title"
+                       @bind:event="oninput" />
+                <span id="title-help" class="field-help">Use a short title that describes the expected outcome.</span>
+                <ValidationMessage For="@(() => _request.Title)" />
+            </div>
+
+            <div class="field">
+                <div class="field-heading">
+                    <label for="description">Description</label>
+                    <span>@_request.Description.Length/256</span>
+                </div>
+                <textarea id="description" name="description" class="field-input description-input" maxlength="256"
+                          rows="5" placeholder="What needs to be completed?" aria-describedby="description-help"
+                          @bind="_request.Description" @bind:event="oninput"></textarea>
+                <span id="description-help" class="field-help">Add the details needed to complete this piece of
+                    work.</span>
+                    <ValidationMessage For="@(() => _request.Description)" />
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(_errorMessage))
+                {
+                    <div class="form-error" role="alert">@_errorMessage</div>
+                }
+
+                <div class="form-actions">
+                    <a class="cancel-button" href="@($"/projects/{ProjectId}/stories/{StoryId}/subtasks")">Cancel</a>
+                    <button class="save-button" type="submit" disabled="@_isSaving" aria-busy="@_isSaving">
+                        @if (_isSaving)
+                        {
+                            <span class="spinner" aria-hidden="true"></span>
+                            <span>Saving...</span>
+                        }
+                        else
+                        {
+                            <span aria-hidden="true">@(IsEditMode ? "✓" : "+")</span>
+                            @(IsEditMode ? "Save changes" : "Create subtask")
+                        }
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </section>

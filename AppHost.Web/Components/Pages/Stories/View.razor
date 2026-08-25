@@ -18,15 +18,20 @@ else if (_story is not null)
     <section class="card shadow-sm">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
-                <div><div class="text-secondary small">Story #@_story.Id · Project #@ProjectId</div><h1 class="h3 mb-0">@_story.Title</h1></div>
-                <span class="badge @(_story.IsActive ? "text-bg-success" : "text-bg-secondary")">@(_story.IsActive ? "Active" : "Inactive")</span>
+                <div>
+                    <div class="text-secondary small">Story #@_story.Id · Project #@ProjectId</div>
+                    <h1 class="h3 mb-0">@_story.Title</h1>
+                </div>
+                <span class="badge @(_story.IsActive ? "text-bg-success" : "text-bg-secondary")">@(_story.IsActive ?
+                                                                                      "Active" : "Inactive")</span>
+                </div>
+                <h2 class="h6 text-secondary">Description</h2>
+                <p>@(string.IsNullOrWhiteSpace(_story.Description) ? "No description" : _story.Description)</p>
+                <div class="d-flex gap-2 mt-4">
+                    <a class="btn btn-outline-secondary" href="@($"/projects/{ProjectId}/stories")">Back</a>
+                    <a class="btn btn-primary" href="@($"/projects/{ProjectId}/stories/{Id}/edit")">Edit story</a>
+                    <a class="btn btn-primary" href="@($"/projects/{ProjectId}/stories/{Id}/subtasks")">Sub Tasks</a>
+                </div>
             </div>
-            <h2 class="h6 text-secondary">Description</h2>
-            <p>@(string.IsNullOrWhiteSpace(_story.Description) ? "No description" : _story.Description)</p>
-            <div class="d-flex gap-2 mt-4">
-                <a class="btn btn-outline-secondary" href="@($"/projects/{ProjectId}/stories")">Back</a>
-                <a class="btn btn-primary" href="@($"/projects/{ProjectId}/stories/{Id}/edit")">Edit story</a>
-            </div>
-        </div>
-    </section>
-}
+        </section>
+    }

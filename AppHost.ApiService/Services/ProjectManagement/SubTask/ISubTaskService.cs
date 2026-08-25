@@ -6,4 +6,5 @@ namespace AppHost.ApiService.Services.ProjectManagement.SubTask;
 public interface ISubTaskService
 {
     Task<ApiResponse<List<SubTaskRecordDto>>> GetSubTasksAsync(int storyId);
+    Task<ApiResponse<SubTaskRecordDto>> CreateSubTasksAsync(SubTaskFormDto request);
 }
