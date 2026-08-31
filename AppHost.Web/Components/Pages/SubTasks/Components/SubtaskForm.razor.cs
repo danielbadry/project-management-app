@@ -22,10 +22,13 @@ partial class SubtaskForm
     private bool _isLoadingOptions = false;
     private bool _isSaving = false;
     private string _errorMessage = string.Empty;
+    private int? _loadedSubTaskId;
 
     [Inject] private StoriesService StoriesService { get; set; } = default!;
     [Inject] private SubTasksService SubTasksService { get; set; } = default!;
     [Inject] private NavigationManager Navigation { get; set; } = default!;
+
+    [Parameter] public SubTaskRecordDto SubTaskInfo { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -38,6 +41,20 @@ partial class SubtaskForm
         _isLoadingOptions = false;
     }
 
+    protected override void OnParametersSet()
+    {
+        if (SubTaskInfo is not null && _loadedSubTaskId != SubTaskInfo.Id)
+        {
+            _request = new SubTaskFormDto
+            {
+                Title = SubTaskInfo.Title,
+                Description = SubTaskInfo.Description,
+                StoryId = SubTaskInfo.StoryId,
+            };
+            _loadedSubTaskId = SubTaskInfo.Id;
+        }
+    }
+
     private async Task HandleSaveAsync()
     {
         _isSaving = true;
@@ -45,12 +62,16 @@ partial class SubtaskForm
 
         try
         {
-            var result = await SubTasksService.CreateSubTasksAsync(_request);
-            if (result.Succeeded)
+            var result = IsEditMode && SubTaskInfo is not null
+                ? await SubTasksService.UpdateSubTaskAsync(SubTaskInfo.StoryId, SubTaskInfo.Id, _request)
+                : await SubTasksService.CreateSubTasksAsync(_request);
+            if (result.Succeeded && result.Data is not null)
             {
-                Navigation.NavigateTo($"/projects/{ProjectId}/stories/{StoryId}/subtasks");
+                Navigation.NavigateTo($"/projects/{ProjectId}/stories/{result.Data.StoryId}/subtasks");
                 return;
             }
+
+            _errorMessage = result.ErrorMessage ?? "The subtask could not be saved.";
         }
         finally
         {

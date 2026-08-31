@@ -25,4 +25,22 @@ public class SubTasksController(ISubTaskService subTaskService) : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
+
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetSubTask(int storyId, int id)
+    {
+        var result = await subTaskService.GetSubTaskAsync(storyId, id);
+        return result.IsSuccess ? Ok(result) : NotFound(result);
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> UpdateSubTask(
+        int storyId,
+        int id,
+        [FromBody] SubTaskFormDto request)
+    {
+        var result = await subTaskService.UpdateSubTaskAsync(storyId, id, request);
+        return result.IsSuccess ? Ok(result) : NotFound(result);
+    }
+
 }

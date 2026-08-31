@@ -46,22 +46,22 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var story in _subTasks)
+                            @foreach (var subTask in _subTasks)
                             {
                                 <tr>
                                     <td>
-                                        <a href="@($"/projects/{ProjectId}/stories/{story.Id}")">@story.Title</a>
-                                        <div class="small text-secondary">#@story.Id</div>
+                                        <a href="@($"/projects/{ProjectId}/stories/{subTask.Id}")">@subTask.Title</a>
+                                        <div class="small text-secondary">#@subTask.Id</div>
                                     </td>
-                                    <td>@(string.IsNullOrWhiteSpace(story.Description) ? "No description" : story.Description)</td>
+                                    <td>@(string.IsNullOrWhiteSpace(subTask.Description) ? "No description" : subTask.Description)</td>
                                     <td>
-                                        <span class="badge @(story.IsActive ? "text-bg-success" : "text-bg-secondary")">
-                                            @(story.IsActive ? "Active" : "Inactive")
+                                        <span class="badge @(subTask.IsActive ? "text-bg-success" : "text-bg-secondary")">
+                                            @(subTask.IsActive ? "Active" : "Inactive")
                                         </span>
                                     </td>
                                     <td class="text-end text-nowrap">
                                         <a class="btn btn-sm btn-outline-secondary"
-                                           href="@($"/projects/{ProjectId}/stories/{story.Id}/edit")">Edit</a>
+                                           href="@($"/projects/{ProjectId}/stories/{subTask.StoryId}/subtasks/{subTask.Id}/edit")">Edit</a>
                                     </td>
                                 </tr>
                             }

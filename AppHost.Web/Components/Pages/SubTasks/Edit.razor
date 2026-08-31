@@ -1,0 +1,20 @@
+@page "/projects/{ProjectId:int}/stories/{StoryId:int}/subtasks/{Id:int}/edit"
+
+@using AppHost.Web.Components.Pages.SubTasks.Components
+@attribute [RequireAuthentication]
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<PageTitle>Edit subtask</PageTitle>
+
+@if (_isLoading)
+{
+    <p role="status">Loading subtask...</p>
+}
+else if (!string.IsNullOrWhiteSpace(_errorMessage))
+{
+    <div class="alert alert-danger" role="alert">@_errorMessage</div>
+}
+else if (_subTask is not null)
+{
+    <SubtaskForm IsEditMode="true" SubTaskInfo="@_subTask" ProjectId="@ProjectId" StoryId="@StoryId" />
+}
